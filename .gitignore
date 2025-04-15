@@ -27,3 +27,6 @@
 # Server specific
 /server/node_modules
 /server/dist/
+
+#docker
+docker/mysql/data/
