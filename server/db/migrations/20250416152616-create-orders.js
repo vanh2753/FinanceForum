@@ -27,6 +27,14 @@ module.exports = {
       vnpay_txn_code: {
         type: Sequelize.STRING,
         allowNull: true
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     });
   },

@@ -1,0 +1,57 @@
+const { loginSchema } = require('../../validators/auth-validator')
+const Account = require('../../models/account')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const { generateAccessToken, generateRefreshToken } = require('../../ultis/token')
+
+const login = async (req, res, next) => {
+    const { email, password } = req.body
+    console.log(email, password)
+    try {
+        const user = await Account.findOne({ where: { email } })
+        if (!user) {
+            return res.status(400).json({
+                EM: 'Email không tồn tại',
+                EC: 1
+            })
+        }
+
+        const validatedPassword = await bcrypt.compare(password, user.password)
+        if (!validatedPassword) {
+            return res.status(400).json({
+                EM: 'Mật khẩu không chính xác',
+                EC: 1
+            })
+        }
+
+        const accessToken = generateAccessToken(user.id)
+        const refreshToken = generateRefreshToken(user.id)
+
+        // lưu refresh token vào cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        res.status(200).json({
+            EM: 'Đăng nhập thành công',
+            EC: 0,
+            DT: {
+                accessToken,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    role: user.role,
+                    avatar_url: user.avatar_url,
+                }
+            }
+        })
+    }
+    catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { login }

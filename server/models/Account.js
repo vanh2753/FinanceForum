@@ -49,12 +49,4 @@ Account.init({
     tableName: 'accounts'
 });
 
-Account.hasMany(Post, { foreignKey: 'accountId' });
-Account.hasMany(Comment, { foreignKey: 'accountId' });
-Account.hasMany(Like, { foreignKey: 'accountId' });
-Account.hasMany(Notification, { foreignKey: 'accountId' });
-Account.hasMany(Report, { foreignKey: 'accountId' });
-Account.hasMany(Product, { foreignKey: 'accountId' });
-Account.hasMany(Order, { foreignKey: 'accountId' });
-
 module.exports = Account;
