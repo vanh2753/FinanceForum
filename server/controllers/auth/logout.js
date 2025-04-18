@@ -1,3 +1,4 @@
+
 const logout = (req, res) => {
     res.clearCookie('refreshToken', {
         httpOnly: true,

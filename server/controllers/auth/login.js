@@ -54,4 +54,31 @@ const login = async (req, res, next) => {
     }
 }
 
-module.exports = { login }
+const refreshToken = async (req, res, next) => {
+    try {
+        console.log(req.cookies)
+        const refreshToken = req.cookies.refreshToken
+        if (!refreshToken) {
+            return res.status(401).json({
+                EM: 'Không tìm thấy refresh token',
+                EC: 1
+            })
+        }
+
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        const user = await Account.findByPk(decoded.userId)
+
+        const newAccessToken = generateAccessToken(user.id)
+        return res.status(200).json({
+            EM: 'Làm mới token thành công',
+            EC: 0,
+            DT: {
+                access_token: newAccessToken
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports = { login, refreshToken }
