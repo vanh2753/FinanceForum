@@ -1,5 +1,5 @@
 const { loginSchema } = require('../../validators/auth-validator')
-const Account = require('../../models/account')
+const { Account } = require('../../models/index')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { generateAccessToken, generateRefreshToken } = require('../../ultis/token')
@@ -24,8 +24,8 @@ const login = async (req, res, next) => {
             })
         }
 
-        const accessToken = generateAccessToken(user.id)
-        const refreshToken = generateRefreshToken(user.id)
+        const accessToken = generateAccessToken(user.id, user.role)
+        const refreshToken = generateRefreshToken(user.id, user.role)
 
         // lưu refresh token vào cookie
         res.cookie('refreshToken', refreshToken, {
@@ -68,7 +68,7 @@ const refreshToken = async (req, res, next) => {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
         const user = await Account.findByPk(decoded.userId)
 
-        const newAccessToken = generateAccessToken(user.id)
+        const newAccessToken = generateAccessToken(user.id, user.role)
         return res.status(200).json({
             EM: 'Làm mới token thành công',
             EC: 0,

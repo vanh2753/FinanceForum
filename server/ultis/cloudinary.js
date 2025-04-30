@@ -10,7 +10,7 @@ cloudinary.config({
 const uploadImage = async (buffer) => {
     try {
         // Convert buffer to base64 string
-        const base64String = `data:image/jpeg;base64,${buffer.toString('base64')}`; // quy tắc phải thêm prefix data:image/jpeg;base64,
+        const base64String = `data:${buffer.mimetype};base64,${buffer.toString('base64')}`; // quy tắc phải thêm prefix data:image/jpeg;base64,
         const result = await cloudinary.uploader.upload(base64String, {
             folder: 'forum',
             resource_type: 'auto'
@@ -22,10 +22,11 @@ const uploadImage = async (buffer) => {
     }
 };
 
-const uploadImages = async (buffers) => {
+//multer sử dụng .array('image_urls', 5) nên files là mảng các object, không truy cập được buffer trực tiếp
+const uploadImages = async (files) => {
     try {
-        const uploadPromises = buffers.map(buffer => {
-            const base64String = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+        const uploadPromises = files.map(file => {
+            const base64String = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`; // phải file.buffer để truy cập
             return cloudinary.uploader.upload(base64String, {
                 folder: 'forum',
                 resource_type: 'auto'
