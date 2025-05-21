@@ -48,16 +48,12 @@ const connectDB = async () => {
 }
 connectDB()// Auto connect to database
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
 app.use(handleError) // middleware handle error đặt ở cuối
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//     console.log(`Example app listening on port ${port}`)
+// })
 
-httpServer.listen(3000, () => {
-    console.log("Socket server running on port 3000");
+httpServer.listen(port, () => {
+    console.log(`Socket and server running on ${port} `);
 });

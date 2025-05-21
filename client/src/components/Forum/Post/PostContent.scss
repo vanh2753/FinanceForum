@@ -1,0 +1,27 @@
+.author-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.post-image {
+    max-width: 100%;
+    width: 160px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.post-image:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.post-content-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}

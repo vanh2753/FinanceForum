@@ -1,4 +1,4 @@
-import axios from '../ultis/axios'
+import axios from './axios'
 
 
 const login = async (data) => {
@@ -24,4 +24,9 @@ const logout = async () => {
     return res.data
 }
 
-export { login, signup, logout }
+const refreshToken = async () => {
+    const res = await axios.post('/refresh-token')
+    return res.data
+}
+
+export { login, signup, logout, refreshToken }

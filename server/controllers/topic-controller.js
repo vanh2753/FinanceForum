@@ -1,4 +1,4 @@
-const { Topic } = require('../models/index')
+const { Topic, Post } = require('../models/index')
 
 const createTopic = async (req, res, next) => {
     try {
@@ -24,6 +24,37 @@ const createTopic = async (req, res, next) => {
     }
 }
 
+const getTopicsForPreviewSection = async (req, res, next) => {
+    try {
+        const topicIds = [1, 2, 3, 4]
+        let topicAndPosts = []
+        for (id of topicIds) {
+            const topic = await Topic.findOne({
+                where: { id },
+                attributes: ['id', 'title', 'description'],
+                include: [{
+                    model: Post,
+                    attributes: ['id', 'title', 'is_approved'],
+                    where: { is_approved: true },
+                    limit: 5,
+                    order: [['createdAt', 'DESC']]
+                }]
+            })
+            if (topic) {
+                topicAndPosts.push(topic)
+            }
+        }
+        return res.status(200).json({
+            EM: 'Lấy topic cho homepage',
+            EC: 0,
+            DT: topicAndPosts
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
-    createTopic
+    createTopic,
+    getTopicsForPreviewSection
 }

@@ -1,6 +1,6 @@
 const { Notification } = require('../models/index')
 
-const getAllNotifications = async (req, res, next) => {
+const getAllNotificationsForUser = async (req, res, next) => {
     try {
         const notifications = await Notification.findAll({
             where: { receiver_id: req.user.userId },
@@ -18,8 +18,9 @@ const getAllNotifications = async (req, res, next) => {
 
 const markAsRead = async (req, res, next) => {
     try {
+        const userId = req.user?.userId || null;
         const notification = await Notification.findByPk(req.params.id)
-        if (notification && notification.receiver_id === req.user.userId) {
+        if (notification && notification.receiver_id === userId) {
             notification.is_read = true
             await notification.save()
             res.status(200).json({
@@ -34,9 +35,10 @@ const markAsRead = async (req, res, next) => {
 
 const markAllAsRead = async (req, res, next) => {
     try {
+        const userId = req.user?.userId || null;
         await Notification.update(
             { is_read: true },
-            { where: { receiver_id: req.user.userId } }
+            { where: { receiver_id: userId } }
         )
         res.status(200).json({
             EC: 0,
@@ -48,7 +50,7 @@ const markAllAsRead = async (req, res, next) => {
 }
 
 module.exports = {
-    getAllNotifications,
+    getAllNotificationsForUser,
     markAsRead,
     markAllAsRead
 }

@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../../api/auth'
-import { setAccessToken, setIsAuthenticated } from '../../redux/slices/authSlice'
+import { setAccessToken, setAuthSuccess } from '../../redux/slices/authSlice'
 import { setUser } from '../../redux/slices/userSlice'
+import { persistor } from '../../redux/store'
 
 const LoginForm = (props) => {
     const { handleShowSignup } = props
@@ -19,12 +20,12 @@ const LoginForm = (props) => {
         const res = await login(data);
         console.log(res.DT.user)
         if (res.EC === 0) {
-            dispatch(setAccessToken(res.DT.accessToken))
-            dispatch(setIsAuthenticated(true))
+            dispatch(setAuthSuccess({ access_token: res.DT.access_token }));
             dispatch(setUser(res.DT.user))
+            localStorage.setItem('access_token', res.DT.access_token)
+            await persistor.flush();
         }
     }
-
     return (
         <div className="container mt-5">
             <div className="justify-content-center">

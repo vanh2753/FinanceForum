@@ -1,0 +1,31 @@
+.list-post {
+    .post-item {
+        background-color: #f8f9fa; // Bootstrap light
+        border-left: 4px solid #0d6efd; // điểm nhấn màu xanh
+
+        &:hover {
+            background-color: #f1f1f1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+
+        .react-group {
+            gap: 10px;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+        }
+    }
+}

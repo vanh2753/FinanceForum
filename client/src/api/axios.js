@@ -1,56 +1,64 @@
-import axios from 'axios';
+import axios from 'axios'
 import { store } from '../redux/store'
-import { setAccessToken, setIsAuthenticated } from '../redux/slices/authSlice';
+import { setAccessToken, setLogout } from '../redux/slices/authSlice'
+import { setUser } from '../redux/slices/userSlice'
 
-const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    timeout: 10000
-});
+const axiosInstance = axios.create({
+    baseURL: 'http://localhost:8080/api',
+    withCredentials: true // Important for cookies
+})
 
-// Add a request interceptor
-instance.interceptors.request.use(function (config) {
-    const token = useSelector(state => state.auth.access_token)
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}` // gắn access_token vào header
+let isRefreshing = false;
+
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = store.getState().auth?.access_token || localStorage.getItem('access_token'); // đề phòng token chưa có trong redux
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`; // đính access_token vào header
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
-    return config;
-}, function (error) {
-    return Promise.reject(error);
-});
+);
+// Add a request interceptor
+axiosInstance.interceptors.response.use(
+    res => res,
+    async error => {
+        const originalRequest = error.config
+        if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
 
-// Add a response interceptor
-instance.interceptors.response.use(
-    (res) => res,  // Success callback: trả về response nếu không có lỗi
-    async (error) => {  // Error callback: xử lý khi có lỗi
-        const originalRequest = error.config  // Lấy thông tin của request ban đầu
-
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true  // Đánh dấu là đã thử lại rồi để tránh vòng lặp vô hạn
+            if (isRefreshing) return Promise.reject(error)
+            isRefreshing = true
+            originalRequest._retry = true
 
             try {
-                // Gọi API để lấy lại token mới
-                const res = await instance.post('/refresh-token')
+                const res = await axiosInstance.post('/refresh-token')
+                const { access_token, user } = res.data.DT
 
-                const newToken = res.data.DT.access_token
+                store.dispatch(setAccessToken(access_token))
+                store.dispatch(setUser(user))
+                localStorage.setItem('access_token', access_token)
 
-                // Cập nhật lại token và trạng thái trong Redux
-                store.dispatch(setAccessToken(newToken))
-                store.dispatch(setIsAuthenticated(true))
+                originalRequest.headers.Authorization = `Bearer ${access_token}`
+                isRefreshing = false
+                return axiosInstance(originalRequest)
+            } catch (err) {
+                store.dispatch(setLogout())
+                store.dispatch(setUser(null))
+                localStorage.removeItem('access_token')
 
-                // Gắn token mới vào header của request cũ
-                originalRequest.headers['Authorization'] = `Bearer ${newToken}`
-
-                // Gửi lại request cũ với token mới
-                return instance(originalRequest)  // Retry lại request ban đầu
-            } catch (refreshErr) {
-                console.error('Refresh token failed', refreshErr)  // Xử lý lỗi nếu không thể refresh token
-                return Promise.reject(refreshErr)
+                isRefreshing = false
+                window.location.href = '/'
+                return Promise.reject(err)
             }
         }
 
-        return Promise.reject(error)  // Nếu không phải 401 hoặc không thể refresh token, trả về lỗi gốc
+        return Promise.reject(error)
     }
 )
 
-
-export default instance;
+export default axiosInstance

@@ -1,5 +1,5 @@
 const { signupSchema } = require('../../validators/auth-validator')
-const Account = require('../../models/account')
+const { Account } = require('../../models/index')
 const bcrypt = require('bcrypt');
 const { uploadImage } = require('../../ultis/cloudinary')
 
@@ -16,7 +16,7 @@ const signup = async (req, res, next) => {
         let finalAvatarUrl = avatar_url;
         if (req.file) {
             try {
-                finalAvatarUrl = await uploadImage(req.file.buffer);
+                finalAvatarUrl = await uploadImage(req.file);
             } catch (uploadError) {
                 console.error('Lỗi khi tải lên ảnh đại diện:', uploadError);
                 return res.status(400).json({

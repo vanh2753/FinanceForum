@@ -3,7 +3,7 @@ const { uploadImages } = require('../ultis/cloudinary')
 const { formatTime } = require('../ultis/formatTime')
 const { likeCountForPost, commentCountForPost } = require('../ultis/count')
 const { checkLikedPost } = require('../ultis/check-reaction')
-const { Account, Post } = require('../models/index')
+const { Account, Post, Like, Comment } = require('../models/index')
 const { checkOwner } = require('../ultis/check-owner')
 const { createNotification } = require('../services/notification-service')
 const { getIO } = require('../socket')
@@ -64,11 +64,60 @@ const getAllPosts = async (req, res, next) => {
 
 const getAllApprovedPosts = async (req, res, next) => {
     try {
-        const posts = await Post.findAll({ where: { is_approved: true } })
+        const userId = req.user?.userId || null;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = (page - 1) * limit; //tính vị trí của bản ghi đầu tiên cần lấy 
+
+        const { count, rows } = await Post.findAndCountAll(
+            {
+                where: { is_approved: true },
+                include: [
+                    {
+                        model: Account,
+                        attributes: ['id', 'username', 'email', 'avatar_url']
+                    }
+                ],
+                order: [['createdAt', 'DESC']],
+                limit: limit,
+                offset: offset
+            })
+
+        const totalPages = Math.ceil(count / limit);
+
+        const postsWithCounts = await Promise.all(
+            rows.map(async (post) => {
+                const [likeCount, commentCount] = await Promise.all([
+                    Like.count({ where: { post_id: post.id } }),
+                    Comment.count({ where: { post_id: post.id } }),
+                ]);
+                return {
+                    ...post.toJSON(),
+                    likeCount,
+                    commentCount,
+                };
+            })
+        );
+        console.log(postsWithCounts)
+
+        // format time lại giờ VN
+        const formatRows = postsWithCounts.map(post => ({
+            ...post,
+            createdAt: formatTime(post.createdAt),
+            updatedAt: formatTime(post.updatedAt),
+        }))
+
+        const postData = {
+            posts: formatRows,
+            currentPage: page,
+            totalPages: totalPages,
+            totalPosts: count
+        }
+
         return res.status(200).json({
             EM: 'Lấy tất cả bài viết đã phê duyệt thành công',
             EC: 0,
-            DT: posts
+            DT: postData
         })
     } catch (error) {
         next(error)
@@ -156,7 +205,7 @@ const getPostsWithPagination = async (req, res, next) => {
             limit: limit,
             offset: offset //sequelize hỗ trợ
         })
-        console.log(count, rows)
+        //console.log(count, rows)
         const totalPages = Math.ceil(count / limit);
         res.json({
             EM: 'Lấy danh sách bài viết theo topic thành công',
@@ -220,6 +269,7 @@ const approvePostForMod = async (req, res, next) => {
 
 const updatePost = async (req, res, next) => {
     try {
+        const userId = req.user?.userId || null;
         const { id } = req.params
         const { topic_id, title, content, image_urls } = req.body
 
@@ -231,7 +281,7 @@ const updatePost = async (req, res, next) => {
             })
         }
 
-        if (!checkOwner(post.author_id, req.user.userId)) {
+        if (!checkOwner(post.author_id, userId)) {
             return res.status(403).json({ EM: 'Bạn không có quyền cập nhật bài viết này', EC: 1 })
         }
 

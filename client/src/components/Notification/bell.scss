@@ -1,0 +1,49 @@
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.notification-bell {
+    max-height: 20rem;
+    min-width: 15rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.notification-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #dc3545;
+    border-radius: 50%;
+}
+
+.noti-item {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s;
+    border-radius: 5px;
+    margin: 4px 6px;
+}
+
+.noti-item:hover {
+    background-color: #f8f9fa;
+}
+
+.noti-content {
+    font-weight: 500;
+    color: #0d6efd;
+    /* màu chủ đạo, có thể thay */
+}
+
+.noti-time {
+    font-size: 0.8rem;
+}
+
+.unread {
+    background-color: #e9f5ff !important;
+    font-weight: 600;
+}
+
+.read {
+    background-color: white;
+    font-weight: normal;
+}

@@ -3,7 +3,14 @@ const { Like } = require('../models/index')
 const createLikeForPost = async (req, res, next) => {
     try {
         const { postId } = req.params
-        const userId = req.user?.userId || null
+        const userId = req.user?.userId
+
+        if (!userId) {
+            return res.status(401).json({
+                EC: 1,
+                EM: 'Bạn cần đăng nhập để thực hiện thao tác này !'
+            })
+        }
 
         const like = await Like.create({
             post_id: postId,
@@ -22,7 +29,14 @@ const createLikeForPost = async (req, res, next) => {
 const unlikeForPost = async (req, res, next) => {
     try {
         const { postId } = req.params
-        const userId = req.user?.userId || null
+        const userId = req.user?.userId
+
+        if (!userId) {
+            return res.status(401).json({
+                EC: 1,
+                EM: 'Bạn cần đăng nhập để thực hiện thao tác này !'
+            })
+        }
 
         const like = await Like.destroy({
             where: { post_id: postId, user_id: userId }
@@ -40,7 +54,14 @@ const unlikeForPost = async (req, res, next) => {
 const createLikeForComment = async (req, res, next) => {
     try {
         const { commentId } = req.params
-        const userId = req.user?.userId || null
+        const userId = req.user?.userId
+
+        if (!userId) {
+            return res.status(401).json({
+                EC: 1,
+                EM: 'Bạn cần đăng nhập để thực hiện thao tác này !'
+            })
+        }
 
         const like = await Like.create({
             comment_id: commentId,

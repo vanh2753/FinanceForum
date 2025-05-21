@@ -7,10 +7,10 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadImage = async (buffer) => {
+const uploadImage = async (file) => {
     try {
         // Convert buffer to base64 string
-        const base64String = `data:${buffer.mimetype};base64,${buffer.toString('base64')}`; // quy tắc phải thêm prefix data:image/jpeg;base64,
+        const base64String = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`; // quy tắc phải thêm prefix data:image/jpeg;base64,
         const result = await cloudinary.uploader.upload(base64String, {
             folder: 'forum',
             resource_type: 'auto'

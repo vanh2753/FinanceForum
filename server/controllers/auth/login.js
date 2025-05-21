@@ -6,7 +6,7 @@ const { generateAccessToken, generateRefreshToken } = require('../../ultis/token
 
 const login = async (req, res, next) => {
     const { email, password } = req.body
-    console.log(email, password)
+    //console.log(email, password)
     try {
         const user = await Account.findOne({ where: { email } })
         if (!user) {
@@ -38,7 +38,7 @@ const login = async (req, res, next) => {
             EM: 'Đăng nhập thành công',
             EC: 0,
             DT: {
-                accessToken,
+                access_token: accessToken,
                 user: {
                     id: user.id,
                     username: user.username,
@@ -73,7 +73,14 @@ const refreshToken = async (req, res, next) => {
             EM: 'Làm mới token thành công',
             EC: 0,
             DT: {
-                access_token: newAccessToken
+                access_token: newAccessToken,
+                user: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    role: user.role,
+                    avatar_url: user.avatar_url,
+                }
             }
         })
     } catch (error) {
