@@ -16,7 +16,7 @@ const CommentList = (props) => {
 
     const fetchCommentData = async (isLoadMore = false) => {
         const res = await getCommentData(postId, limit, offset);
-        console.log(res)
+        //console.log(res)
         if (res.EC === 0) {
             if (res.DT.length < limit) setHasMore(false); // hết comment thì khóa nút tải thêm
             setCommentData(prev =>

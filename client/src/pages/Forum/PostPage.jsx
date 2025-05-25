@@ -17,7 +17,7 @@ const PostPage = () => {
         const res = await getPostData(postId)
         if (res.EC === 0) {
             setPostData(res.DT)
-            // console.log(res.DT)
+            //console.log(res.DT)
         }
     }
     useEffect(() => {

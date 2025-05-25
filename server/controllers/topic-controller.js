@@ -54,7 +54,21 @@ const getTopicsForPreviewSection = async (req, res, next) => {
     }
 }
 
+const getTopicsList = async (req, res, next) => {
+    try {
+        const topics = await Topic.findAll()
+        return res.status(200).json({
+            EM: 'Lấy danh sách topic',
+            EC: 0,
+            DT: topics
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createTopic,
-    getTopicsForPreviewSection
+    getTopicsForPreviewSection,
+    getTopicsList
 }

@@ -10,7 +10,8 @@ const { getIO } = require('../socket')
 
 const createPost = async (req, res, next) => {
     try {
-        const { topic_id, title, content, image_urls } = req.body
+        const { topic_id, title, content } = req.body
+        console.log(req.body)
         const author_id = req.user.userId
         if (!topic_id || !title || !content) {
             return res.status(400).json({
@@ -19,7 +20,7 @@ const createPost = async (req, res, next) => {
             })
         }
 
-        let finalImageUrls = image_urls
+        let finalImageUrls = []
         if (req.files) {
             try {
                 finalImageUrls = await uploadImages(req.files)
@@ -98,7 +99,7 @@ const getAllApprovedPosts = async (req, res, next) => {
                 };
             })
         );
-        console.log(postsWithCounts)
+        //console.log(postsWithCounts)
 
         // format time lại giờ VN
         const formatRows = postsWithCounts.map(post => ({
@@ -285,12 +286,28 @@ const updatePost = async (req, res, next) => {
             return res.status(403).json({ EM: 'Bạn không có quyền cập nhật bài viết này', EC: 1 })
         }
 
+        // xử lý ảnh cũ (các links)
+        let oldImageLinks = [];
+        try {
+            oldImageLinks = JSON.parse(image_urls);
+        } catch (err) {
+            return res.status(400).json({ EM: 'image_urls không hợp lệ', EC: 1 });
+        }
+
+        // Xử lý ảnh mới (files)
+        let newImageLinks = [];
+        if (req.files && req.files.length > 0) {
+            newImageLinks = await uploadImages(req.files); //trả về link ảnh từ cloud
+        }
+
+        // Gộp ảnh cũ và ảnh mới
+        const updatedImageUrls = [...oldImageLinks, ...newImageLinks]; //sau khi chuyển hết về link
+
         post.id = id
         post.topic_id = topic_id
         post.title = title
         post.content = content
-        post.image_urls = image_urls || []
-
+        post.image_urls = updatedImageUrls
         await post.save()
 
         return res.status(200).json({

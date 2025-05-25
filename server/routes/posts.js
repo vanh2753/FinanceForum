@@ -12,7 +12,7 @@ router.get('/posts/:id', optionalAuth, getPostById)
 router.get('/posts/home/:topicId', optionalAuth, getPostsForHome)
 router.get('/topics/:topicId/posts', optionalAuth, getPostsWithPagination);
 router.patch('/posts/:id/approve', authenticateToken, approvePostForMod)
-router.put('/posts/:id', authenticateToken, updatePost)
+router.put('/posts/:id', authenticateToken, upload.array('image_files', 5), updatePost)
 router.delete('/posts/:id', authenticateToken, deletePost)
 
 module.exports = router
