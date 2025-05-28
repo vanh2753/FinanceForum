@@ -16,6 +16,7 @@ const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
 const likeRoutes = require('./routes/likes');
 const notificationRoutes = require('./routes/notification');
+const newsRoutes = require('./routes/news');
 
 // khởi tạo socket
 initializeSocket(httpServer);
@@ -37,6 +38,7 @@ app.use('/api', postRoutes)
 app.use('/api', commentRoutes)
 app.use('/api', likeRoutes)
 app.use('/api', notificationRoutes)
+app.use('/api', newsRoutes)
 // Database connection
 const connectDB = async () => {
     try {

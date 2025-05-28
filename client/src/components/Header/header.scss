@@ -7,21 +7,23 @@
 
     background-color: #0F172A;
 
-    .navbar-list {
-        margin-top: 20px;
 
-        .nav-item {
-            margin: 0px 5px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-            border: 1px solid white;
-            border-bottom: none;
+    .tab-link {
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        color: white;
+        border: none;
+        flex: 1;
+        text-align: center;
+    }
 
-            .nav-link {
-                color: white;
-            }
-        }
-
+    .tab-link.active {
+        border: 2px solid #2a4075;
+        border-radius: 5px;
+        background-color: #1a2849;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        position: relative;
     }
 
     .btn-group {

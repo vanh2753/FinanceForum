@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import NotificationBell from '../Notification/NotificationBell'
 import defaultAvatar from '../../assets/images/default-avatar.png'
+import { NavLink } from 'react-router-dom'
 
 const Header = () => {
     const [show, setShow] = useState(false)
@@ -35,19 +36,20 @@ const Header = () => {
 
     return (
         <div className="header-container container mb-3">
-            <div className="row ">
-                <div className="navbar-list col-12 col-lg-8">
-                    <Nav justify variant="tabs" defaultActiveKey="/home">
-                        <Nav.Item>
-                            <Nav.Link href="/">Diễn đàn</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/">Tin tức</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link href="/">Góc nhìn Chuyên gia</Nav.Link>
-                        </Nav.Item>
-                    </Nav>
+            <div className="row py-3">
+                <div className="home-tabs col-12 col-lg-8 d-flex justify-content-start align-items-center ">
+                    <NavLink to="/" end className="tab-link align-items-center">
+                        Trang chủ
+                    </NavLink>
+                    <NavLink to="/forum" className="tab-link">
+                        Diễn đàn
+                    </NavLink>
+                    <NavLink to="/news" className="tab-link">
+                        Tin tức
+                    </NavLink>
+                    <NavLink to="/expert" className="tab-link">
+                        Góc nhìn chuyên gia
+                    </NavLink>
                 </div>
                 {isAuthenticated === false || !user ? (
                     <div className="btn-group col-12 col-lg-2 shadow-lg rounded-2">

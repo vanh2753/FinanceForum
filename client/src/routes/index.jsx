@@ -11,7 +11,9 @@ import { setUser } from '../redux/slices/userSlice'
 import { refreshToken } from '../api/auth'
 import LoadingScreen from '../components/LoadingScreen'
 import Header from '../components/Header/Header'
-
+import NewsPage from '../pages/News/NewsPage'
+import CreateArticlePage from '../pages/News/Article/CreateArticlePage'
+import ArticlePage from '../pages/News/Article/ArticlePage'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -78,7 +80,14 @@ const AppRoutes = () => {
                         <Route index element={<ForumPage />} />
                         <Route path="posts/:postId" element={<PostPage />} />
                     </Route>
-                </Route>
+
+                    {/* News section */}
+                    <Route path='news'>
+                        <Route index element={<NewsPage />} />
+                        <Route path="create-article" element={<CreateArticlePage />} />
+                        <Route path="article/:articleId" element={<ArticlePage />} />
+                    </Route>
+                </Route >
             </Routes>
 
         </>
