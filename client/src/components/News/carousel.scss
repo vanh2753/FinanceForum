@@ -1,0 +1,42 @@
+.carousel-item-card {
+  width: 600px;
+  height: 500px;
+  background-color: #1c2e4a;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.carousel-image-frame {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+.carousel-excerpt {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.carousel-control-prev {
+  left: 5rem; /* đưa mũi tên trái sát vào hơn */
+}
+
+.carousel-control-next {
+  right: 5rem; /* đưa mũi tên phải sát vào hơn */
+}
