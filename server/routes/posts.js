@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { authenticateToken } = require('../middleware/authenticateToken')
 const { createPost, getAllPosts, approvePostForMod, getAllApprovedPosts, getPostById, updatePost, deletePost, getPostsForHome, getPostsWithPagination } = require('../controllers/post-controller')
-const upload = require('../middleware/multer')
+const { upload } = require('../middleware/multer')
 const { optionalAuth } = require('../middleware/optionalAuth')
 
 router.post('/posts', authenticateToken, upload.array('image_urls', 5), createPost)

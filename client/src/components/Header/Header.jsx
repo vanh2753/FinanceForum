@@ -37,7 +37,7 @@ const Header = () => {
     return (
         <div className="header-container container mb-3">
             <div className="row py-3">
-                <div className="home-tabs col-12 col-lg-8 d-flex justify-content-start align-items-center ">
+                <div className=" home-tabs col-12 col-lg-8 d-flex ">
                     <NavLink to="/" end className="tab-link align-items-center">
                         Trang chủ
                     </NavLink>

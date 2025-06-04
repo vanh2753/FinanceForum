@@ -1,15 +1,10 @@
-.section-container {
-    padding: auto;
-}
-
 .forum-preview-block {
-
     .post-link:hover {
         background-color: #f1f1f1;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    /* Nút "Xem thêm" */
     .btn-outline-custom {
         border-color: #e97f3c;
         color: #e97f3c;

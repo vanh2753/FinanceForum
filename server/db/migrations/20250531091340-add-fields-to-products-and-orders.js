@@ -43,6 +43,11 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: false,
     });
+    await queryInterface.changeColumn("products", "price", {
+      type: Sequelize.FLOAT,
+      allowNull: false,
+    });
+
   },
 
   async down(queryInterface, Sequelize) {
@@ -52,5 +57,11 @@ module.exports = {
 
     await queryInterface.removeColumn("orders", "product_id");
     await queryInterface.removeColumn("orders", "payment_status");
+
+    await queryInterface.changeColumn("products", "price", {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    });
+
   },
 };

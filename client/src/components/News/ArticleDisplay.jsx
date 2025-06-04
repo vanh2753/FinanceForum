@@ -16,4 +16,4 @@ const ArticleDisplay = ({ data }) => {
         </div>
     );
 }
-export default ArticleDisplay
+export default ArticleDisplay 

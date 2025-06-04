@@ -1,3 +1,13 @@
+const Account = require("./Account");
+const Post = require("./Post");
+const Comment = require("./Comment");
+const Like = require("./Like");
+const Notification = require("./Notification");
+const Report = require("./Report");
+const Product = require("./Product");
+const Order = require("./Order");
+const Article = require("./Article");
+const Topic = require("./Topic");
 const applyAssociations = () => {
   // Account
   Account.hasMany(Post, { foreignKey: "author_id" });

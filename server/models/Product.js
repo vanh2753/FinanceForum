@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-class Product extends Model {}
+class Product extends Model { }
 
 Product.init(
   {
@@ -19,7 +19,7 @@ Product.init(
       allowNull: true,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     file_url: {

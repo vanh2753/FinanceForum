@@ -14,6 +14,8 @@ import Header from '../components/Header/Header'
 import NewsPage from '../pages/News/NewsPage'
 import CreateArticlePage from '../pages/News/Article/CreateArticlePage'
 import ArticlePage from '../pages/News/Article/ArticlePage'
+import ExpertViewPage from '../pages/ExpertView/ExpertViewPage'
+import ProductPage from '../pages/ExpertView/ProductPage'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -87,7 +89,11 @@ const AppRoutes = () => {
                         <Route path="create-article" element={<CreateArticlePage />} />
                         <Route path="article/:articleId" element={<ArticlePage />} />
                     </Route>
-                </Route >
+                    <Route path='expert'>
+                        <Route index element={<ExpertViewPage />} />
+                        <Route path="products/:productId" element={<ProductPage />} />
+                    </Route>
+                </Route>
             </Routes>
 
         </>

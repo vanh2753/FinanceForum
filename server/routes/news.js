@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const upload = require('../middleware/multer')
+const { upload } = require('../middleware/multer')
 const { articleImageHandle, createArticle, getNewsItem, getArticleById } = require('../controllers/news-controller')
 const { authenticateToken } = require('../middleware/authenticateToken')
 const { authorizeRoles } = require('../middleware/authorizeRoles')

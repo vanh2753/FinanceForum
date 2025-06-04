@@ -1,43 +1,40 @@
-import './forumPreview.scss'
+import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-const ForumPreviewBlock = (props) => {
-    const { topicsData } = props
+import './forumPreview.scss';
+
+const ForumPreviewBlock = ({ topicsData }) => {
     return (
-        <div className='forum-preview-block'>
-            <div className='d-flex '>
-                <h3 className='text-light my-auto'>Diễn đàn</h3>
-                <Link to={`/forum`} className="btn btn-sm btn-outline-custom mx-2 my-auto">
+        <div className="forum-preview-block py-5">
+            <div className="d-flex align-items-center mb-4">
+                <h3 className="text-light mb-0 me-3">Diễn đàn</h3>
+                <Link to="/forum" className="btn btn-sm btn-outline-custom">
                     Xem thêm
                 </Link>
             </div>
-            {topicsData.map((topic) => (
-                <div
-                    key={topic.id}
-                    className="forum-preview-item border rounded-3 p-3 mb-4 bg-light shadow-sm"
-                >
-                    <div className="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
-                        <h5 className="mb-0">{topic.title}</h5>
 
+            <div className="row">
+                {topicsData.map((topic) => (
+                    <div key={topic.id} className="col-12 col-md-6 col-lg-3 mb-4">
+                        <Card className="h-100 shadow-sm">
+                            <Card.Body>
+                                <Card.Title className="mb-3">{topic.title}</Card.Title>
+                                {topic.Posts.slice(0, 5).map((post) => (
+                                    <Card.Text key={post.id} className="mb-2">
+                                        <Link
+                                            to={`/forum/posts/${post.id}`}
+                                            className="post-link text-decoration-none text-dark d-block border-bottom "
+                                        >
+                                            {post.title.length > 50 ? post.title.slice(0, 50) + '…' : post.title}
+                                        </Link>
+                                    </Card.Text>
+                                ))}
+                            </Card.Body>
+                        </Card>
                     </div>
-
-                    <ul className="list-unstyled mb-0 ps-2">
-                        {topic.Posts.map((post) => (
-                            <li key={post.id} className="mb-1">
-                                <Link
-                                    to={`/forum/posts/${post.id}`}
-                                    className="post-link text-decoration-none text-dark d-block p-2 rounded"
-                                >
-                                    {post.title}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
+    );
+};
 
-
-    )
-}
-
-export default ForumPreviewBlock
+export default ForumPreviewBlock;

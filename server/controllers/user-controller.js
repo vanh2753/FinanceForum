@@ -60,7 +60,53 @@ const createModAccount = async (req, res, next) => {
     }
 }
 
+const assignExpertRole = async (req, res, next) => {
+    try {
+        const { id } = req.params
+
+        const account = await Account.findByPk(id)
+
+        if (!account) {
+            return res.status(404).json({
+                EC: 1,
+                EM: "Tài khoản không tồn tại"
+            })
+        }
+
+        account.isExpert = true;
+        await account.save();
+
+        res.status(200).json({
+            EC: 0,
+            EM: "Cấp quyền chuyên gia thành công",
+            DT: {
+                id: account.id,
+                username: account.username,
+                email: account.email,
+                isExpert: account.isExpert
+            }
+        })
+    } catch (error) {
+
+    }
+}
+
+const getAllUser = async (req, res, next) => {
+    try {
+        const users = await Account.findAll()
+        res.status(200).json({
+            EM: 'Lấy danh sách người dùng thành công',
+            EC: 0,
+            DT: users
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getUser,
-    createModAccount
+    createModAccount,
+    assignExpertRole,
+    getAllUser
 }

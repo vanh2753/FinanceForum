@@ -1,5 +1,7 @@
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
+const streamifier = require("streamifier");
+const path = require("path");
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -53,4 +55,28 @@ const uploadArticleImage = async (file) => {
     }
 };
 
-module.exports = { cloudinary, uploadImage, uploadImages, uploadArticleImage };
+const uploadPdfToCloudinary = (file) => {
+    return new Promise((resolve, reject) => {
+        const originalName = path.parse(file.originalname).name;
+        const stream = cloudinary.uploader.upload_stream(
+            {
+                folder: "expert_pdfs",
+                resource_type: "raw",
+                public_id: `${originalName}-${Date.now()}.pdf`, // ép Cloudinary lưu đuôi pdf
+            },
+            (error, result) => {
+                if (error) {
+                    console.error("Upload error:", error);
+                    return reject(new Error("Không thể upload file PDF lên Cloudinary"));
+                }
+                const downloadUrl = `${result.secure_url}?fl_attachment=${encodeURIComponent(originalName)}.pdf`;
+                resolve(downloadUrl);
+            }
+        );
+
+        streamifier.createReadStream(file.buffer).pipe(stream);
+    });
+};
+
+
+module.exports = { cloudinary, uploadImage, uploadImages, uploadArticleImage, uploadPdfToCloudinary };
