@@ -7,6 +7,7 @@ import { createLikeForPost, unlikeForPost } from "../../../api/forum/post-api";
 import { FaEllipsisH } from "react-icons/fa";
 import EditDelButton from "../ActionButton/EditDelButton";
 import { useSelector } from "react-redux";
+import AuthModal from "../../Auth/AuthModal";
 const PostContent = ({ postData }) => {
   const {
     author_id,
@@ -22,8 +23,10 @@ const PostContent = ({ postData }) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [showToolTips, setShowToolTips] = useState(false);
+  const [show, setShow] = useState(false)
 
-  const userId = useSelector((state) => state.userInfo.user.id);
+  const userId = useSelector((state) => state.userInfo.user?.id);
+  const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     setLiked(isLiked);
@@ -31,31 +34,38 @@ const PostContent = ({ postData }) => {
   }, [isLiked]);
 
   const handleLike = async () => {
-    const previousLike = liked;
-    const previousCount = likesCount;
+    if (!isLoggedIn) {
+      setShow(true);
+      return;
+    }
+    else {
+      const previousLike = liked;
+      const previousCount = likesCount;
 
-    // update UI trước khi gọi api
-    setLiked(!liked);
-    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
+      // update UI trước khi gọi api
+      setLiked(!liked);
+      setLikesCount(liked ? likesCount - 1 : likesCount + 1);
 
-    try {
-      if (liked) {
-        // đã like thì click sẽ là unlike
-        await unlikeForPost(postData.id);
-      } else {
-        // chua like thì click sẽ là like
-        await createLikeForPost(postData.id);
+      try {
+        if (liked) {
+          // đã like thì click sẽ là unlike
+          await unlikeForPost(postData.id);
+        } else {
+          // chua like thì click sẽ là like
+          await createLikeForPost(postData.id);
+        }
+      } catch (error) {
+        // API lỗi không gọi được thì rollback
+        console.log("Error: ", error);
+        setLiked(previousLike);
+        setLikesCount(previousCount);
       }
-    } catch (error) {
-      // API lỗi không gọi được thì rollback
-      console.log("Error: ", error);
-      setLiked(previousLike);
-      setLikesCount(previousCount);
     }
   };
 
   return (
     <div className="container  ">
+      {show && <AuthModal show={show} setShow={setShow} />}
       <div className=" content-container  row text-light rounded shadow-sm p-3">
         {/* người đăng */}
         <div className="col-md-2 text-center border-end pe-3">

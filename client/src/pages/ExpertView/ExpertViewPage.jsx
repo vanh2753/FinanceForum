@@ -25,7 +25,7 @@ const ExpertViewPage = () => {
                     {/* Filter component ở đây sau cũng được */}
                     <div className="text-white">Filter (tạm trống)</div>
                 </div>
-                <div className="col-10">
+                <div className="col-10 ">
                     <ProductList
                         products={products}
                         page={pageInfo.page}

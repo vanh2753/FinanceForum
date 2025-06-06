@@ -36,7 +36,7 @@ const Header = () => {
 
     return (
         <div className="header-container container mb-3">
-            <div className="row py-3">
+            <div className="row py-3 ">
                 <div className=" home-tabs col-12 col-lg-8 d-flex ">
                     <NavLink to="/" end className="tab-link align-items-center">
                         Trang chủ
@@ -52,8 +52,8 @@ const Header = () => {
                     </NavLink>
                 </div>
                 {isAuthenticated === false || !user ? (
-                    <div className="btn-group col-12 col-lg-2 shadow-lg rounded-2">
-                        <button className="btn btn btn-info" onClick={() => setShow(true)}>Đăng nhập</button>
+                    <div className="btn-group col-12 col-lg-4 shadow-lg rounded-2 d-flex justify-content-end ">
+                        <button className="btn btn btn-info " onClick={() => setShow(true)}>Đăng nhập</button>
                         {show && <AuthModal show={show} setShow={setShow} />}
                     </div>
                 ) : (

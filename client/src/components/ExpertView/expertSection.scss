@@ -1,0 +1,24 @@
+.expert-banner {
+    background-image: url('../../assets/images/expert-banner.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 300px;
+    border-radius: 1rem;
+    position: relative;
+    aspect-ratio: 16 / 9; // chỉnh tỉ lệ khung ảnh theo tỉ lệ
+    margin-top: 5rem;
+}
+
+.expert-banner-content {
+    padding-top: 3rem;
+}
+
+.custom-btn {
+    color: white;
+    margin-top: 5rem;
+    font-size: 1.3rem;
+
+    &:hover {
+        color: #f97316;
+    }
+}

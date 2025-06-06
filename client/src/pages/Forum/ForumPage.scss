@@ -14,11 +14,16 @@
             gap: 10px;
         }
 
-        .author-avatar {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
+        .author-group {
+            min-width: 180px;
+
+            .author-avatar {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+            }
         }
+
 
         .post-title {
             font-size: 1.2rem;

@@ -81,11 +81,11 @@ const CreatePostForm = () => {
                 <Form.Group className="mb-2 position-relative">
                     <Form.Control
                         as="textarea"
-                        rows={3}
+                        rows={10}
                         placeholder="Nội dung bài viết"
                         value={content}
                         onChange={handleContentChange}
-                        className=" border-0 "
+                        className="border-0  overflow-y-auto resize-none"
                     />
 
                     {/* Label đóng vai trò nút upload ảnh */}

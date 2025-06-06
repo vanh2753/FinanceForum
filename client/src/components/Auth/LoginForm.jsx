@@ -18,7 +18,7 @@ const LoginForm = (props) => {
         e.preventDefault() //ko cho reload trang
         const data = { email, password }
         const res = await login(data);
-        console.log(res.DT.user)
+        //console.log(res.DT.user)
         if (res.EC === 0) {
             dispatch(setAuthSuccess({ access_token: res.DT.access_token }));
             dispatch(setUser(res.DT.user))

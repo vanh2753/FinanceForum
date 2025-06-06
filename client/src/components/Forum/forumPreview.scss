@@ -1,6 +1,10 @@
 .forum-preview-block {
+    .post-link {
+        border-bottom: 1px solid #a7a4a4;
+    }
+
     .post-link:hover {
-        background-color: #f1f1f1;
+        background-color: #16243a;
         border-radius: 0.25rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
@@ -13,5 +17,14 @@
     .btn-outline-custom:hover {
         background-color: #e97f3c;
         color: #fff;
+    }
+
+    .topic-card {
+        background-color: #1c2e4a;
+        color: #fff;
+    }
+
+    .card-title {
+        font-style: italic;
     }
 }

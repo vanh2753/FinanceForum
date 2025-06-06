@@ -4,8 +4,8 @@ const getDataForSection = async () => {
     return res.data
 }
 
-const getLatestApprovedPosts = async () => {
-    const res = await axios.get('/posts/approved')
+const getLatestApprovedPosts = async (page = 1, limit = 5) => {
+    const res = await axios.get(`/posts/approved?page=${page}&limit=${limit}`)
     return res.data
 }
 

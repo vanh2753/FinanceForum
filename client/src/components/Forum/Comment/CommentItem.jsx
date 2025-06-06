@@ -5,37 +5,49 @@ import {
   createLikeForComment,
 } from "../../../api/forum/comment-api";
 import { useState } from "react";
+import AuthModal from "../../Auth/AuthModal";
+import { useSelector } from "react-redux";
 const CommentItem = ({ comment }) => {
   const [liked, setLiked] = useState(comment.isLiked);
   const [likesCount, setLikesCount] = useState(comment.likeCount);
+  const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
+  const [show, setShow] = useState(false)
   const handleLike = async (id) => {
-    const previousLike = liked;
-    const previousCount = likesCount;
-
-    // update UI trước khi gọi api
-    setLiked(!liked);
-    setLikesCount(liked ? likesCount - 1 : likesCount + 1);
-
-    try {
-      if (liked) {
-        // đã like thì click sẽ là unlike
-        await unlikeForComment(id);
-      } else {
-        // chua like thì click sẽ là like
-        await createLikeForComment(id);
-      }
-    } catch (error) {
-      // API lỗi không gọi được thì rollback
-      console.log("Error: ", error);
-      setLiked(previousLike);
-      setLikesCount(previousCount);
+    if (!isLoggedIn) {
+      setShow(true);
+      return;
     }
+    else {
+      const previousLike = liked;
+      const previousCount = likesCount;
+
+      // update UI trước khi gọi api
+      setLiked(!liked);
+      setLikesCount(liked ? likesCount - 1 : likesCount + 1);
+
+      try {
+        if (liked) {
+          // đã like thì click sẽ là unlike
+          await unlikeForComment(id);
+        } else {
+          // chua like thì click sẽ là like
+          await createLikeForComment(id);
+        }
+      } catch (error) {
+        // API lỗi không gọi được thì rollback
+        console.log("Error: ", error);
+        setLiked(previousLike);
+        setLikesCount(previousCount);
+      }
+    }
+
   };
   return (
     <div
       className="d-flex border-bottom py-2 px-2 align-items-start"
       style={{ backgroundColor: "#1c2e4a" }}
     >
+      {show && <AuthModal show={show} setShow={setShow} />}
       <img
         src={comment.Account.avatar_url || defaultAvatar}
         alt="avatar"
