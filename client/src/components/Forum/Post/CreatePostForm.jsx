@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { createNewPost, getTopicsList } from "../../../api/forum/post-api";
+import { toast, ToastContainer } from "react-toastify";
 
 const MAX_IMAGES = 5;
 
@@ -40,10 +41,20 @@ const CreatePostForm = () => {
 
         const res = await createNewPost(title, topic, content, images)
 
-        setTitle("");
-        setTopic("");
-        setContent("");
-        setImages([]);
+        if (res.EC === 0) {
+            toast.success("Bài viết đã được đăng tải, vui lòng chờ xét duyệt!", {
+                style: {
+                    whiteSpace: "nowrap",
+                    color: "black",
+                    fontStyle: "italic",
+                    minWidth: "400px",
+                },
+            });
+            setTitle("");
+            setTopic("");
+            setContent("");
+            setImages([]);
+        }
     };
 
     return (
@@ -135,6 +146,8 @@ const CreatePostForm = () => {
                     Đăng bài
                 </Button>
             </Form>
+            {/* Form của bạn */}
+            <ToastContainer position="top-center" autoClose={3000} />
         </div>
     );
 };

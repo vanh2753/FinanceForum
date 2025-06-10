@@ -21,8 +21,8 @@ const createArticle = async (title, content) => {
   return res.data;
 };
 
-const getAllNews = async () => {
-  const res = await axios.get("/articles/all-news");
+const getAllNews = async (page = 1, limit = 10) => {
+  const res = await axios.get(`/articles/all-news?page=${page}&limit=${limit}`);
   return res.data;
 };
 

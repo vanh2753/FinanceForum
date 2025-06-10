@@ -53,7 +53,7 @@ const createArticle = async (req, res, next) => {
 const getNewsItem = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
     const { count, rows } = await Article.findAndCountAll({
@@ -121,7 +121,7 @@ const getRandomArticlesInOneWeek = async (req, res, next) => {
   try {
     const today = new Date(); // hôm nay
     const oneWeekAgo = new Date(today);
-    oneWeekAgo.setDate(today.getDate() - 10); // 7 ngày trước
+    oneWeekAgo.setDate(today.getDate() - 7); // 7 ngày trước
 
     const articles = await Article.findAll({
       where: {

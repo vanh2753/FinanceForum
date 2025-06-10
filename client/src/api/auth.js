@@ -7,7 +7,7 @@ const login = async (data) => {
 }
 
 const signup = async (data) => {
-    console.log(data)
+    //console.log(data)
     const formData = new FormData()
     formData.append('email', data.email)
     formData.append('password', data.password)

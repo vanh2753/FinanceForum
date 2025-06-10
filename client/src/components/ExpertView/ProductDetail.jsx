@@ -1,8 +1,30 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { createOrder, createPaymentUrl } from '../../api/expert-view/order-api';
 
 const ProductDetail = ({ product }) => {
-    const { title, description, price, language, views, createdAt, Account = {} } = product;
+    const { id, title, description, price, language, views, createdAt, Account = {} } = product;
+
+    const handlePayment = async () => {
+        try {
+            // tạo order
+            const order = await createOrder(id)
+            const orderId = order?.DT?.id;
+
+            // tạo url thanh toán của vnpay
+            const res = await createPaymentUrl(orderId);
+            const paymentUrl = res?.DT;
+            if (paymentUrl) {
+                window.location.href = paymentUrl; // chuển sang trang thanh toán của vnpay
+            } else {
+                alert("Thao tác thanh toán hiện đang lỗi.");
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className="container mt-4 text-white" style={{ backgroundColor: '#1c2e4a' }}>
@@ -36,7 +58,7 @@ const ProductDetail = ({ product }) => {
                     {/* Dưới cùng: giá tiền + thanh toán */}
                     <div className=" mt-3 align-items-center  ">
                         <div className="g me-3 fs-3" style={{ color: '#ff6f00' }}>{price} VND</div>
-                        <Button className='border-0 mb-3' style={{ backgroundColor: '#ff6f00' }}>Thanh toán</Button>
+                        <Button className='border-0 mb-3' style={{ backgroundColor: '#ff6f00' }} onClick={handlePayment}>Thanh toán</Button>
                     </div>
                 </div>
             </div>

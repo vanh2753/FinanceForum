@@ -16,6 +16,9 @@ import CreateArticlePage from '../pages/News/Article/CreateArticlePage'
 import ArticlePage from '../pages/News/Article/ArticlePage'
 import ExpertViewPage from '../pages/ExpertView/ExpertViewPage'
 import ProductPage from '../pages/ExpertView/ProductPage'
+import ModLayout from '../layout/ModLayout'
+import ModDashboard from '../pages/Dashboard/ModDasboard'
+import AdminDashboard from '../pages/Dashboard/AdminDashboard'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -93,6 +96,14 @@ const AppRoutes = () => {
                         <Route index element={<ExpertViewPage />} />
                         <Route path="products/:productId" element={<ProductPage />} />
                     </Route>
+                </Route>
+
+                <Route path="/mod-dashboard" element={<ModLayout />}>
+                    <Route index element={<ModDashboard />} />
+                </Route>
+
+                <Route path="/admin-dashboard" element={<ModLayout />}>
+                    <Route index element={<AdminDashboard />} />
                 </Route>
             </Routes>
 

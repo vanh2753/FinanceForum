@@ -27,7 +27,7 @@ const getUser = async (req, res, next) => {
 }
 
 const createModAccount = async (req, res, next) => {
-    const { username, email, password, avatar_url } = req.body
+    const { username, email, password } = req.body
     try {
         const { error } = signupSchema.validate(req.body)
         if (error) {
@@ -36,20 +36,20 @@ const createModAccount = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(password, 10); // hash password
 
-        let finalAvatarUrl = avatar_url;
-        if (req.file) {
-            try {
-                finalAvatarUrl = await uploadImage(req.file.buffer);
-            } catch (uploadError) {
-                console.error('Lỗi khi tải lên ảnh đại diện:', uploadError);
-                return res.status(400).json({
-                    EM: 'Lỗi khi tải lên ảnh đại diện',
-                    EC: 1
-                });
-            }
-        }
+        // let finalAvatarUrl = avatar_url;
+        // if (req.file) {
+        //     try {
+        //         finalAvatarUrl = await uploadImage(req.file.buffer);
+        //     } catch (uploadError) {
+        //         console.error('Lỗi khi tải lên ảnh đại diện:', uploadError);
+        //         return res.status(400).json({
+        //             EM: 'Lỗi khi tải lên ảnh đại diện',
+        //             EC: 1
+        //         });
+        //     }
+        // }
 
-        const user = await Account.create({ username, email, password: hashedPassword, avatar_url: finalAvatarUrl, role: 'mod' })
+        const user = await Account.create({ username, email, password: hashedPassword, role: 'mod' })
         return res.status(201).json({
             EM: 'Tạo tài khoản Mod thành công',
             EC: 0,
@@ -104,9 +104,51 @@ const getAllUser = async (req, res, next) => {
     }
 }
 
+const getUserByEmail = async (req, res, next) => {
+    try {
+        const email = req.body.email;
+
+        const user = await Account.findOne({ where: { email: email } });
+
+        if (!user) {
+            return res.status(404).json({
+                EM: "Tài khoản không tồn tại",
+                EC: 1
+            })
+        }
+
+        res.status(200).json({
+            EM: "Lấy thống tin người dùng thành công",
+            EC: 0,
+            DT: user
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getModList = async (req, res, next) => {
+    try {
+        const modList = await Account.findAll({
+            where: { role: 'mod' },
+            attributes: ['username', 'email', 'avatar_url', 'createdAt'],
+            order: [['createdAt', 'DESC']],
+        })
+        res.status(200).json({
+            EM: 'Lấy danh sách mod',
+            EC: 0,
+            DT: modList
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getUser,
     createModAccount,
     assignExpertRole,
-    getAllUser
+    getAllUser,
+    getUserByEmail,
+    getModList
 }

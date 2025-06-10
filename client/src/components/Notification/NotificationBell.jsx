@@ -42,7 +42,7 @@ const NotificationBell = () => {
     const handleMarkAsRead = async (id) => {
         const res = await markAsRead(id)
         if (res.EC === 0) {
-            console.log("da doc")
+            //console.log("da doc")
         }
     }
 

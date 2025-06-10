@@ -11,6 +11,7 @@ const NewsCarousel = () => {
     const res = await getArticlesForHomeSection();
     if (res.EC === 0) {
       setArticles(res.DT);
+      //console.log(res.DT);
     }
   };
 

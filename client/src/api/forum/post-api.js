@@ -39,7 +39,7 @@ const createNewPost = async (title, topicId, content, images) => {
         formData.append("image_urls", imgFile); // backend phải dùng upload.array("images")
     });
 
-    console.log(formData);
+    //console.log(formData);
     const res = await axios.post("/posts", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
@@ -75,4 +75,26 @@ const deletePost = async (id) => {
     return res.data
 }
 
-export { getDataForSection, getLatestApprovedPosts, getPostData, createLikeForPost, unlikeForPost, createNewPost, getTopicsList, updatePost, deletePost }
+const getAllPosts = async (page = 1, limit = 10) => {
+    const res = await axios.get(`/posts?page=${page}&limit=${limit}`)
+    return res.data
+}
+
+const approvePostForMod = async (id) => {
+    const res = await axios.patch(`/posts/${id}/approve`)
+    return res.data
+}
+
+export {
+    getDataForSection,
+    getLatestApprovedPosts,
+    getPostData,
+    createLikeForPost,
+    unlikeForPost,
+    createNewPost,
+    getTopicsList,
+    updatePost,
+    deletePost,
+    getAllPosts,
+    approvePostForMod
+}

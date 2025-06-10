@@ -1,9 +1,9 @@
-
+const { Op } = require('sequelize');
 const { uploadImages } = require('../ultis/cloudinary')
 const { formatTime } = require('../ultis/formatTime')
 const { likeCountForPost, commentCountForPost } = require('../ultis/count')
 const { checkLikedPost } = require('../ultis/check-reaction')
-const { Account, Post, Like, Comment } = require('../models/index')
+const { Account, Post, Like, Comment, Topic } = require('../models/index')
 const { checkOwner } = require('../ultis/check-owner')
 const { createNotification } = require('../services/notification-service')
 const { getIO } = require('../socket')
@@ -52,11 +52,37 @@ const createPost = async (req, res, next) => {
 
 const getAllPosts = async (req, res, next) => {
     try {
-        const posts = await Post.findAll()
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = (page - 1) * limit; //tính vị trí của bản ghi đầu tiên cần lấy 
+        const { count, rows: posts } = await Post.findAndCountAll(
+            {
+                include: [
+                    {
+                        model: Account,
+                        attributes: ['id', 'username', 'email', 'avatar_url']
+                    },
+                    {
+                        model: Topic,
+                        attributes: ['id', 'title']
+                    }
+                ],
+                order: [['createdAt', 'DESC']],
+                limit: limit,
+                offset: offset
+            }
+        )
+
+        const totalPages = Math.ceil(count / limit);
+
         return res.status(200).json({
             EM: 'Lấy tất cả bài viết của user thành công',
             EC: 0,
-            DT: posts
+            DT: {
+                posts: posts,
+                currentPage: page,
+                totalPages: totalPages,
+            }
         })
     } catch (error) {
         next(error)
@@ -67,7 +93,7 @@ const getAllApprovedPosts = async (req, res, next) => {
     try {
         const userId = req.user?.userId || null;
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
+        const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit; //tính vị trí của bản ghi đầu tiên cần lấy 
 
         const { count, rows } = await Post.findAndCountAll(
@@ -345,6 +371,42 @@ const deletePost = async (req, res, next) => {
     }
 }
 
+const queryPost = async (req, res, next) => {
+    try {
+        const { title, page = 1, limit = 10 } = req.query
+        const offset = (page - 1) * limit;
+
+        let query = {};
+        if (title) {
+            query.title = {
+                [Op.like]: `%${title}%`
+            }
+        }
+
+        const [rows, count] = await Post.findAndCountAll({
+            where: query,
+            offset: Number(offset),
+            limit: Number(limit),
+            order: [['createdAt', 'DESC']],
+        })
+
+        const totalPages = Math.ceil(count / limit);
+
+        res.status(200).json({
+            EM: "Lấy kết quả tìm kiếm bài viết",
+            EC: 0,
+            DT: {
+                posts: rows,
+                currentPage: page,
+                totalPages: totalPages,
+                totalPosts: count
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -354,5 +416,6 @@ module.exports = {
     updatePost,
     deletePost,
     getPostsForHome,
-    getPostsWithPagination
+    getPostsWithPagination,
+    queryPost
 }
