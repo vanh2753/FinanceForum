@@ -7,6 +7,7 @@ const {
   getNewsItem,
   getArticleById,
   getRandomArticlesInOneWeek,
+  queryAriticles,
 } = require("../controllers/news-controller");
 const { authenticateToken } = require("../middleware/authenticateToken");
 const { authorizeRoles } = require("../middleware/authorizeRoles");
@@ -24,6 +25,7 @@ router.post(
 );
 router.get("/articles/all-news", getNewsItem);
 router.get("/articles/random-articles", getRandomArticlesInOneWeek);
+router.get("/articles/search", queryAriticles);
 router.get("/articles/:id", getArticleById);
 
 module.exports = router;

@@ -1,7 +1,6 @@
 import axios from '../axios'
 
 const createOrder = async (productId) => {
-    console.log(productId);
     const res = await axios.post(`/orders/${productId}`)
     return res.data
 }

@@ -150,10 +150,45 @@ const getRandomArticlesInOneWeek = async (req, res, next) => {
     next(error);
   }
 };
+
+const queryAriticles = async (req, res, next) => {
+  try {
+    const { searchInput, page = 1, limit = 5 } = req.query
+    const offset = (page - 1) * limit;
+
+    let query = {};
+    if (searchInput) {
+      query = { title: { [Op.like]: `%${searchInput}%` } }
+    }
+    const { rows, count } = await Article.findAndCountAll({
+      where: query,
+      offset: Number(offset),
+      limit: Number(limit),
+      order: [['createdAt', 'DESC']],
+    })
+
+    const totalPages = Math.ceil(count / limit);
+
+    res.status(200).json({
+      EM: "Lấy kết quả tìm kiếm bài viết",
+      EC: 0,
+      DT: {
+        items: rows,
+        currentPage: page,
+        totalPages: totalPages,
+        totalPosts: count
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   articleImageHandle,
   createArticle,
   getNewsItem,
   getArticleById,
   getRandomArticlesInOneWeek,
+  queryAriticles
 };

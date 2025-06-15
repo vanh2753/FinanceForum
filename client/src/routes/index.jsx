@@ -19,6 +19,7 @@ import ProductPage from '../pages/ExpertView/ProductPage'
 import ModLayout from '../layout/ModLayout'
 import ModDashboard from '../pages/Dashboard/ModDasboard'
 import AdminDashboard from '../pages/Dashboard/AdminDashboard'
+import RequireRole from './RequireRole'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -98,12 +99,16 @@ const AppRoutes = () => {
                     </Route>
                 </Route>
 
-                <Route path="/mod-dashboard" element={<ModLayout />}>
-                    <Route index element={<ModDashboard />} />
+                <Route element={<RequireRole roles={['mod']} />} >
+                    <Route path="/mod-dashboard" element={<ModLayout />}>
+                        <Route index element={<ModDashboard />} />
+                    </Route>
                 </Route>
 
-                <Route path="/admin-dashboard" element={<ModLayout />}>
-                    <Route index element={<AdminDashboard />} />
+                <Route element={<RequireRole roles={['admin']} />} >
+                    <Route path="/admin-dashboard" element={<ModLayout />}>
+                        <Route index element={<AdminDashboard />} />
+                    </Route>
                 </Route>
             </Routes>
 

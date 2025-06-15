@@ -373,18 +373,30 @@ const deletePost = async (req, res, next) => {
 
 const queryPost = async (req, res, next) => {
     try {
-        const { title, page = 1, limit = 10 } = req.query
+        const { searchInput, page = 1, limit = 5 } = req.query
         const offset = (page - 1) * limit;
 
         let query = {};
-        if (title) {
-            query.title = {
-                [Op.like]: `%${title}%`
-            }
+        if (searchInput) {
+            query[Op.or] = [
+                { title: { [Op.like]: `%${searchInput}%` } },
+                { content: { [Op.like]: `%${searchInput}%` } }
+            ];
         }
-
-        const [rows, count] = await Post.findAndCountAll({
+        const { rows, count } = await Post.findAndCountAll({
             where: query,
+            include: [
+                {
+                    model: Account,
+                    attributes: ['id', 'username', 'email', 'avatar_url'],
+                    required: false,
+                },
+                {
+                    model: Topic,
+                    attributes: ['id', 'title'],
+                    required: false,
+                }
+            ],
             offset: Number(offset),
             limit: Number(limit),
             order: [['createdAt', 'DESC']],

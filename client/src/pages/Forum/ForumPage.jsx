@@ -11,27 +11,48 @@ import PaginationControls from '../../components/Common/PaginationControls'
 import CreatePostForm from "../../components/Forum/Post/CreatePostForm"
 import { Button } from "react-bootstrap"
 import { GoPlusCircle } from "react-icons/go";
+import SearchBar from "../../components/Common/SearchBar"
+import { useSearchParams } from "react-router-dom";
+import { getSearchPostsResult } from "../../api/forum/post-api"
 const ForumPage = () => {
     const [postsList, setPostsList] = useState({ posts: [] }); //phải khởi tạo đúng kiểu data tránh lỗi
     const [pageInfo, setPageInfo] = useState({ page: 1, totalPages: 10 });
     const [showCreatePostForm, setShowCreatePostForm] = useState(false);
-    const limit = 6
+    const limit = 10
+    const [searchParams] = useSearchParams();
+    const searchInput = searchParams.get("searchInput");
 
     const fetchData = async (page) => {
-        const res = await getLatestApprovedPosts(page, limit)
-        if (res.EC === 0) {
-            setPostsList(res.DT)
-            setPageInfo({ page: res.DT.currentPage, totalPages: res.DT.totalPages });
-            //console.log(res.DT)
+        if (searchInput) {
+            const res = await getSearchPostsResult(searchInput, page, limit);
+            if (res.EC === 0) {
+                setPostsList(res.DT);
+                console.log(res.DT);
+                setPageInfo({
+                    page: res.DT.currentPage,
+                    totalPages: res.DT.totalPages
+                });
+            }
+        } else {
+            const res = await getLatestApprovedPosts(page, limit);
+            if (res.EC === 0) {
+                setPostsList(res.DT);
+                setPageInfo({
+                    page: res.DT.currentPage,
+                    totalPages: res.DT.totalPages
+                });
+            }
         }
-    }
+    };
+
 
     useEffect(() => {
-        fetchData(1)
-    }, [])
+        fetchData(pageInfo.page);
+    }, [searchInput, pageInfo.page]); // Khi thay đổi input
     return (
         <>
             <div className='container'>
+                <SearchBar placeholder="Tìm kiếm..." searchPath="/forum" />
                 <div className="create-post">
                     <Button className="px-3 py-2 mb-3 " onClick={() => setShowCreatePostForm(!showCreatePostForm)} >
                         <GoPlusCircle />Tạo bài viết
@@ -39,7 +60,9 @@ const ForumPage = () => {
                     {showCreatePostForm && <CreatePostForm />}
                 </div>
                 <div className='list-post'>
-                    <h2 className="fw-bold text-light mb-4">Bài viết mới nhất</h2>
+                    <h2 className="fw-bold text-light mb-4">
+                        {searchInput ? `Kết quả tìm kiếm cho: "${searchInput}"` : "Bài viết mới nhất"}
+                    </h2>
                     <div className='list-post'>
                         {
                             postsList.posts.map((post) => (

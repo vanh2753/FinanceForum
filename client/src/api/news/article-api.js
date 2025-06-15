@@ -35,10 +35,17 @@ const getArticlesForHomeSection = async () => {
   const res = await axios.get("/articles/random-articles");
   return res.data;
 };
+
+const getSearchArticlesResult = async (searchInput, page = 1, limit = 10) => {
+  const res = await axios.get(`/articles/search?searchInput=${encodeURIComponent(searchInput)}&page=${page}&limit=${limit}`);
+  return res.data;
+}
+
 export {
   uploadArticleImage,
   createArticle,
   getAllNews,
   getArticleById,
   getArticlesForHomeSection,
+  getSearchArticlesResult
 };

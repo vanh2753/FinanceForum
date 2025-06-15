@@ -44,7 +44,7 @@ app.use('/api', notificationRoutes)
 app.use('/api', newsRoutes)
 app.use('/api', productRoutes)
 app.use('/api', vnpayRoutes)
-app.use('/api', orderRoutes)
+
 
 // Database connection
 const connectDB = async () => {

@@ -1,7 +1,12 @@
 .item {
-    :hover {
-        background-color: #1c2e4a;
-        border: none;
-        border-radius: 10px;
+
+    background-color: #1c2e4a;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    &:hover {
+        background-color: white;
+        color: black;
     }
 }

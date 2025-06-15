@@ -85,6 +85,12 @@ const approvePostForMod = async (id) => {
     return res.data
 }
 
+const getSearchPostsResult = async (searchInput, page = 1, limit = 10) => {
+    const res = await axios.get(`/posts/search?searchInput=${encodeURIComponent(searchInput)}&page=${page}&limit=${limit}`);
+    return res.data;
+}
+
+
 export {
     getDataForSection,
     getLatestApprovedPosts,
@@ -96,5 +102,6 @@ export {
     updatePost,
     deletePost,
     getAllPosts,
-    approvePostForMod
+    approvePostForMod,
+    getSearchPostsResult
 }
