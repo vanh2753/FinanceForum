@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 
-class Order extends Model {}
+class Order extends Model { }
 
 Order.init(
   {
@@ -30,7 +30,7 @@ Order.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    vnpay_txn_code: {
+    transaction_code: {
       type: DataTypes.STRING,
       allowNull: true,
     },

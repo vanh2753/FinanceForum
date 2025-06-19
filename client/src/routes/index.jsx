@@ -20,6 +20,7 @@ import ModLayout from '../layout/ModLayout'
 import ModDashboard from '../pages/Dashboard/ModDasboard'
 import AdminDashboard from '../pages/Dashboard/AdminDashboard'
 import RequireRole from './RequireRole'
+import PaymentSuccess from '../pages/ExpertView/PaymentSuccess'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -98,6 +99,8 @@ const AppRoutes = () => {
                         <Route path="products/:productId" element={<ProductPage />} />
                     </Route>
                 </Route>
+
+                <Route path='payment-success' element={<PaymentSuccess />} />
 
                 <Route element={<RequireRole roles={['mod']} />} >
                     <Route path="/mod-dashboard" element={<ModLayout />}>

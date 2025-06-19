@@ -18,7 +18,7 @@ const likeRoutes = require('./routes/likes');
 const notificationRoutes = require('./routes/notification');
 const newsRoutes = require('./routes/news');
 const productRoutes = require('./routes/product');
-const vnpayRoutes = require('./routes/vnpay');
+const stripeRoutes = require('./routes/stripe');
 const orderRoutes = require('./routes/order');
 
 // khởi tạo socket
@@ -43,7 +43,8 @@ app.use('/api', likeRoutes)
 app.use('/api', notificationRoutes)
 app.use('/api', newsRoutes)
 app.use('/api', productRoutes)
-app.use('/api', vnpayRoutes)
+app.use('/api', stripeRoutes)
+app.use('/api', orderRoutes)
 
 
 // Database connection

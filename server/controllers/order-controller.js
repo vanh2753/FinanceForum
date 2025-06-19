@@ -38,4 +38,30 @@ const createOrder = async (req, res, next) => {
     }
 }
 
-module.exports = { createOrder }
+const checkIfPurchased = async (req, res, next) => {
+    try {
+        const userId = req?.user?.userId;
+        const { productId } = req.params
+
+        console.log(userId, productId)
+
+        const order = await Order.findOne({
+            where: {
+                product_id: productId,
+                user_id: userId,
+                payment_status: "PAID"
+            }
+        });
+
+        if (order) {
+            return res.status(200).json({ EC: 0, EM: "Đã mua" });
+        } else {
+            return res.status(200).json({ EC: 1, EM: "Chưa mua" });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+module.exports = { createOrder, checkIfPurchased }

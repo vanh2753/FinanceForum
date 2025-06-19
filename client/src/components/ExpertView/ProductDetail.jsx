@@ -1,30 +1,40 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { createOrder, createPaymentUrl } from '../../api/expert-view/order-api';
+import { createOrder, createPaymentSession, checkIfPurchased } from '../../api/expert-view/order-api';
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 const ProductDetail = ({ product }) => {
     const { id, title, description, price, language, views, createdAt, Account = {} } = product;
+    const [hasPurchased, setHasPurchased] = useState(false);
+    const user = useSelector((state) => state.userInfo.user);
 
     const handlePayment = async () => {
         try {
             // tạo order
             const order = await createOrder(id)
             const orderId = order?.DT?.id;
+            const product = { id, title, price }
 
-            // tạo url thanh toán của vnpay
-            const res = await createPaymentUrl(orderId);
-            const paymentUrl = res?.DT;
-            if (paymentUrl) {
-                window.location.href = paymentUrl; // chuển sang trang thanh toán của vnpay
-            } else {
-                alert("Thao tác thanh toán hiện đang lỗi.");
-            }
+            const res = await createPaymentSession(orderId, product)
+            window.location.href = res.url
 
         } catch (error) {
             console.log(error);
         }
     };
+
+    const handleCheckIfPurchased = async () => {
+        const res = await checkIfPurchased(id)
+        if (res.EC === 0) {
+            setHasPurchased(true)
+        }
+    }
+
+    useEffect(() => {
+        if (user && product?.id) handleCheckIfPurchased();
+    }, [user, product]);
 
     return (
         <div className="container mt-4 text-white" style={{ backgroundColor: '#1c2e4a' }}>
@@ -57,8 +67,21 @@ const ProductDetail = ({ product }) => {
                     <p className="mt-2 " style={{ fontSize: '1.0rem', fontStyle: 'italic' }} >{description}</p>
                     {/* Dưới cùng: giá tiền + thanh toán */}
                     <div className=" mt-3 align-items-center  ">
-                        <div className="g me-3 fs-3" style={{ color: '#ff6f00' }}>{price} VND</div>
-                        <Button className='border-0 mb-3' style={{ backgroundColor: '#ff6f00' }} onClick={handlePayment}>Thanh toán</Button>
+                        <div className="g me-3 fs-3" style={{ color: '#ff6f00' }}>{price} $</div>
+                        {!hasPurchased ? (
+                            <Button className='border-0 mb-3' style={{ backgroundColor: '#ff6f00' }} onClick={handlePayment}>
+                                Thanh toán
+                            </Button>
+                        ) : (
+                            <a
+                                href={product.file_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn btn-success mb-3"
+                            >
+                                Tải file
+                            </a>
+                        )}
                     </div>
                 </div>
             </div>
