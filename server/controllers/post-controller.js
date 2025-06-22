@@ -419,6 +419,19 @@ const queryPost = async (req, res, next) => {
     }
 }
 
+const getMyPost = async (req, res, next) => {
+    try {
+        const userId = req.user.userId
+        const posts = await Post.findAll({
+            where: { author_id: userId },
+            order: [['createdAt', 'DESC']]
+        })
+        return res.status(200).json({ EC: 0, EM: "Lấy lịch sử bài viết", DT: posts })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -429,5 +442,6 @@ module.exports = {
     deletePost,
     getPostsForHome,
     getPostsWithPagination,
-    queryPost
+    queryPost,
+    getMyPost
 }

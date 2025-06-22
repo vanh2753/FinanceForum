@@ -8,6 +8,7 @@ import { FaEllipsisH } from "react-icons/fa";
 import EditDelButton from "../ActionButton/EditDelButton";
 import { useSelector } from "react-redux";
 import AuthModal from "../../Auth/AuthModal";
+import { GoComment } from "react-icons/go";
 const PostContent = ({ postData }) => {
   const {
     author_id,
@@ -18,6 +19,7 @@ const PostContent = ({ postData }) => {
     Account = {},
     isLiked,
     likeCount,
+    commentCount
   } = postData;
 
   const [liked, setLiked] = useState(false);
@@ -102,7 +104,7 @@ const PostContent = ({ postData }) => {
                 <FaEllipsisH onClick={() => setShowToolTips(!showToolTips)} />
 
                 {showToolTips && (
-                  <div className="position-absolute end-100 bg-white p-2 rounded shadow mx-2">
+                  <div className="position-absolute end-100 p-2 rounded shadow mx-2" style={{ backgroundColor: '#343a40' }}>
                     <EditDelButton data={postData} type="post" />
                   </div>
                 )}
@@ -133,14 +135,21 @@ const PostContent = ({ postData }) => {
               </div>
             )}
           </div>
-
-          <div className="like-button">
-            <div>
-              <LikeButton
-                liked={liked}
-                likesCount={likesCount}
-                handleLike={handleLike}
-              />
+          <div className="btn-gr d-flex">
+            <div className="like-button me-3">
+              <div className="d-flex">
+                <LikeButton
+                  liked={liked}
+                  likesCount={likesCount}
+                  handleLike={handleLike}
+                />
+              </div>
+            </div>
+            <div className="comment-icon start d-flex align-items-end pb-1">
+              <GoComment className=" text-light" style={{ fontSize: "1.5rem" }} />
+              <div className=" text-light" style={{ marginLeft: "0.3rem" }}>
+                {commentCount}
+              </div>
             </div>
           </div>
         </div>

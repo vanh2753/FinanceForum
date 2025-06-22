@@ -63,5 +63,23 @@ const checkIfPurchased = async (req, res, next) => {
     }
 };
 
+const getMyOrder = async (req, res, next) => {
+    try {
+        const userId = req.user.userId
+        const orders = await Order.findAll({
+            where: { user_id: userId, payment_status: "PAID" },
+            include: [
+                {
+                    model: Product,
+                    attributes: ['title', 'price']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+        return res.status(200).json({ EC: 0, EM: "Lấy lịch sử mua hàng", DT: orders })
+    } catch (error) {
+        next(error)
+    }
+}
 
-module.exports = { createOrder, checkIfPurchased }
+module.exports = { createOrder, checkIfPurchased, getMyOrder }

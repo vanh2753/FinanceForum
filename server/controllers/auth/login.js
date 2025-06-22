@@ -6,13 +6,20 @@ const { generateAccessToken, generateRefreshToken } = require('../../ultis/token
 
 const login = async (req, res, next) => {
     const { email, password } = req.body
+    const { error } = loginSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({
+            EM: error.details[0].message,
+            EC: 1
+        });
+    }
     //console.log(email, password)
     try {
         const user = await Account.findOne({ where: { email } })
         if (!user) {
             return res.status(400).json({
                 EM: 'Email không tồn tại',
-                EC: 1
+                EC: 2
             })
         }
 
@@ -20,7 +27,7 @@ const login = async (req, res, next) => {
         if (!validatedPassword) {
             return res.status(400).json({
                 EM: 'Mật khẩu không chính xác',
-                EC: 1
+                EC: 2
             })
         }
 
@@ -45,6 +52,7 @@ const login = async (req, res, next) => {
                     email: user.email,
                     role: user.role,
                     avatar_url: user.avatar_url,
+                    isExpert: user.isExpert
                 }
             }
         })
@@ -56,7 +64,7 @@ const login = async (req, res, next) => {
 
 const refreshToken = async (req, res, next) => {
     try {
-        console.log(req.cookies)
+        //console.log(req.cookies)
         const refreshToken = req.cookies.refreshToken
         if (!refreshToken) {
             return res.status(401).json({
@@ -80,6 +88,7 @@ const refreshToken = async (req, res, next) => {
                     email: user.email,
                     role: user.role,
                     avatar_url: user.avatar_url,
+                    isExpert: user.isExpert
                 }
             }
         })

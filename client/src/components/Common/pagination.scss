@@ -1,0 +1,13 @@
+.custom-pagination .page-link {
+    background-color: #0F172A !important;
+    /* màu nền */
+    color: white !important;
+    /* màu chữ */
+    border: none !important;
+    transition: 0.2s ease-in-out;
+}
+
+.custom-pagination .page-link:hover {
+    background-color: #1E293B !important;
+    /* hover */
+}

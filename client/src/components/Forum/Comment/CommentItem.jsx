@@ -44,8 +44,8 @@ const CommentItem = ({ comment }) => {
   };
   return (
     <div
-      className="d-flex border-bottom py-2 px-2 align-items-start"
-      style={{ backgroundColor: "#1c2e4a" }}
+      className="d-flex py-2 px-2 align-items-startm mb-2 px-3"
+      style={{ backgroundColor: "#1c2e4a", borderLeft: '1px solid white' }}
     >
       {show && <AuthModal show={show} setShow={setShow} />}
       <img

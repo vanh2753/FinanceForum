@@ -30,7 +30,7 @@
     "redux-persist": "^6.0.0",
     "sass": "^1.84.0",
     "socket.io-client": "^4.8.1",
-    "tinymce": "^7.9.0",
+    "tinymce": "^7.9.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

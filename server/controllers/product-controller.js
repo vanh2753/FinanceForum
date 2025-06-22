@@ -1,4 +1,4 @@
-const { Product, Account } = require('../models/index')
+const { Product, Account, Topic } = require('../models/index')
 const { uploadPdfToCloudinary } = require('../ultis/cloudinary')
 const { Op, Sequelize } = require("sequelize");
 
@@ -162,9 +162,77 @@ const queryProduct = async (req, res, next) => {
         next(error)
     }
 }
+
+const getProductsByAuthor = async (req, res, next) => {
+    try {
+        const { userId } = req.user
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit
+
+        const products = await Product.findAll({
+            where: {
+                accountId: userId
+            },
+            include: [{
+                model: Topic,
+                attributes: ['id', 'title']
+            }],
+            order: [['createdAt', 'DESC']],
+            offset,
+            limit
+        })
+
+        const total = await Product.count({ where: { accountId: userId } })
+        const totalePages = Math.ceil(total / limit)
+        res.status(200).json({
+            EM: "Lấy danh sách tài liệu của tài liệu viên",
+            EC: 0,
+            DT: {
+                products,
+                currentPage: page,
+                totalPages: totalePages,
+                totalProducts: total
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const deleteProduct = async (req, res, next) => {
+    try {
+        const { userId } = req.user
+        const { id } = req.params
+
+        const product = await Product.findOne({
+            where: {
+                id,
+                accountId: userId
+            }
+        })
+
+        if (!product) {
+            return res.status(404).json({
+                EM: "Tài liệu không tồn tại",
+                EC: 1
+            })
+        }
+
+        await product.destroy()
+        res.status(200).json({
+            EM: "Xóa sản phẩm thành cong",
+            EC: 0
+        })
+    } catch (error) {
+
+    }
+}
 module.exports = {
     createProduct,
     getProductList,
     getProductById,
+    getProductsByAuthor,
+    deleteProduct,
     queryProduct
 }

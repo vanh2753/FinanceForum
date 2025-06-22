@@ -48,6 +48,12 @@ const NotificationBell = () => {
 
     const handleMarkAllRead = async () => {
         const res = await markAllAsRead()
+        if (res.EC === 0) {
+            // Cập nhật trạng thái tất cả thành đã đọc
+            setNotifications((prev) =>
+                prev.map((noti) => ({ ...noti, is_read: true }))
+            );
+        }
     }
 
     return (
@@ -71,8 +77,7 @@ const NotificationBell = () => {
                             :
                             <div className="d-flex justify-content-center">
                                 <Button
-                                    variant="link"
-                                    className="text-decoration-none ms-2 border-bottom w-100"
+                                    className="text-nowrap mark-all-btn"
                                     onClick={handleMarkAllRead}
                                 >
                                     Đánh dấu tất cả đã đọc

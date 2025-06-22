@@ -144,11 +144,81 @@ const getModList = async (req, res, next) => {
     }
 }
 
+const updateUsername = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const { username } = req.body;
+
+        if (!username) return res.status(400).json({ message: "Thiếu username" });
+
+        await Account.update({ username }, { where: { id: userId } });
+        res.json({ message: "Cập nhật username thành công", username });
+    } catch (error) {
+        next(error)
+    }
+}
+
+const updatePassword = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword)
+            return res.status(400).json({ message: "Thiếu mật khẩu cũ hoặc mới" });
+
+        const user = await Account.findByPk(userId);
+        const match = await bcrypt.compare(oldPassword, user.password);
+
+        if (!match) return res.status(401).json({ message: "Mật khẩu cũ không đúng" });
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        await Account.update({ password: hashed }, { where: { id: userId } });
+
+        res.json({ message: "Đổi mật khẩu thành công" });
+    } catch (error) {
+        next(error)
+    }
+}
+
+const updateAvatar = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+
+        let finalAvatarUrl;
+
+        if (req.file) {
+            try {
+                finalAvatarUrl = await uploadImage(req.file); // Upload Cloudinary
+            } catch (uploadError) {
+                console.error("Lỗi khi tải lên ảnh đại diện:", uploadError);
+                return res.status(400).json({
+                    message: "Lỗi khi tải lên ảnh đại diện",
+                });
+            }
+        } else {
+            return res.status(400).json({
+                message: "Chưa chọn file ảnh",
+            });
+        }
+
+        await Account.update({ avatar_url: finalAvatarUrl }, { where: { id: userId } });
+
+        res.json({
+            message: "Cập nhật avatar thành công",
+            avatar_url: finalAvatarUrl,
+        });
+    } catch (error) {
+        next(error)
+    }
+}
 module.exports = {
     getUser,
     createModAccount,
     assignExpertRole,
     getAllUser,
     getUserByEmail,
-    getModList
+    getModList,
+    updateUsername,
+    updatePassword,
+    updateAvatar
 }

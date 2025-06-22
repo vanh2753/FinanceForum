@@ -52,7 +52,7 @@ const ProductDetail = ({ product }) => {
                         <span className="fw-medium">{Account.username}</span>
                     </div>
                     <div className="">Ngôn ngữ: {language?.toUpperCase()}</div>
-                    <div className="">Đã xem: {views}</div>
+                    <div className="">Lượt tải về: {views}</div>
                     <div className="">
                         Ngày đăng: {new Date(createdAt).toLocaleDateString()}
                     </div>

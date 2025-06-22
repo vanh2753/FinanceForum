@@ -21,6 +21,8 @@ import ModDashboard from '../pages/Dashboard/ModDasboard'
 import AdminDashboard from '../pages/Dashboard/AdminDashboard'
 import RequireRole from './RequireRole'
 import PaymentSuccess from '../pages/ExpertView/PaymentSuccess'
+import ExpertDashboard from '../pages/Dashboard/ExpertDashboard'
+import UserDashboard from '../pages/Dashboard/UserDashboard'
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -97,7 +99,9 @@ const AppRoutes = () => {
                     <Route path='expert'>
                         <Route index element={<ExpertViewPage />} />
                         <Route path="products/:productId" element={<ProductPage />} />
+                        <Route path="expert-dashboard" element={<ExpertDashboard />} />
                     </Route>
+                    <Route path="/my-account" element={<UserDashboard />} />
                 </Route>
 
                 <Route path='payment-success' element={<PaymentSuccess />} />

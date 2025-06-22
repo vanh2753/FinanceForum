@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { verifyCheckoutSession } from '../../api/expert-view/order-api';
 import { Spinner } from 'react-bootstrap'
+import { useRef } from 'react';
 
 const PaymentSuccess = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -9,16 +10,18 @@ const PaymentSuccess = () => {
     const sessionId = searchParams.get("session_id");
     const productId = searchParams.get("product_id");
     const [verified, setVerified] = useState(false);
+    const hasVerifiedRef = useRef(false);
+
     useEffect(() => {
         const verifyPayment = async () => {
-            try {
-                if (!sessionId) return;
+            if (!sessionId || hasVerifiedRef.current) return;
 
+            hasVerifiedRef.current = true; // Đánh dấu là đã verify rồi tránh gọi api 2 lần trong StrictMode
+
+            try {
                 const res = await verifyCheckoutSession(sessionId);
                 if (res?.EC === 0) {
                     setVerified(true);
-                } else {
-                    console.warn("Thanh toán chưa được xác thực:", res?.EM || res);
                 }
             } catch (error) {
                 console.error("Lỗi xác thực thanh toán:", error);
@@ -26,7 +29,7 @@ const PaymentSuccess = () => {
         };
 
         verifyPayment();
-    }, [sessionId]);
+    }, []);
 
     useEffect(() => {
         if (verified) {

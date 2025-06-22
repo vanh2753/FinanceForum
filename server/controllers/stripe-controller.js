@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const { Order } = require("../models/index");
+const { Order, Product } = require("../models/index");
 
 const createCheckoutSession = async (req, res) => {
     const { product, orderId } = req.body;
@@ -57,6 +57,18 @@ const verifyCheckoutSession = async (req, res) => {
         // Kiểm tra trạng thái thanh toán
         if (session.payment_status === "paid") {
             const orderId = session.metadata.order_id;
+            const productId = session.metadata.product_id;
+
+            const order = await Order.findOne({ where: { id: orderId } });
+
+            // Kiểm tra tránh bug
+            if (!order) {
+                return res.status(404).json({ EC: 1, EM: "Không tìm thấy đơn hàng" });
+            }
+
+            if (order.payment_status === 'PAID') {
+                return res.status(200).json({ EC: 0, EM: "Đơn hàng đã xử lý trước đó" });
+            }
 
             // Cập nhật đơn hàng trong DB
             await Order.update(
@@ -68,6 +80,13 @@ const verifyCheckoutSession = async (req, res) => {
                     where: { id: orderId }
                 }
             );
+
+            // tăng views lên khi thanh toán thành công
+            await Product.increment("views", {
+                by: 1,
+                where: { id: productId }
+            });
+            console.log("✅ [verifyCheckoutSession] Gọi verify với session_id:", session_id);
 
             return res.status(200).json({ EC: 0, EM: "Xác thực thanh toán thành công" });
         } else {

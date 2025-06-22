@@ -20,4 +20,5 @@ const checkIfPurchased = async (productId) => {
     return res.data
 }
 
+
 export { createOrder, createPaymentSession, verifyCheckoutSession, checkIfPurchased }

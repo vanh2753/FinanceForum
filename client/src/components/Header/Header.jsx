@@ -5,11 +5,12 @@ import AuthModal from '../Auth/AuthModal'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLogout } from '../../redux/slices/authSlice'
 import { setUser } from '../../redux/slices/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import NotificationBell from '../Notification/NotificationBell'
 import defaultAvatar from '../../assets/images/default-avatar.png'
 import { NavLink } from 'react-router-dom'
+import { IoSettingsOutline } from "react-icons/io5";
 
 const Header = () => {
     const [show, setShow] = useState(false)
@@ -60,9 +61,10 @@ const Header = () => {
                     // phải viết điều kiện check user để tránh bug khi chưa đăng nhập
                     user && (
                         <div className='user-info col-lg-4 d-flex justify-content-center align-items-center'>
-                            <NotificationBell className='me-3' />
                             <img src={user.avatar_url || defaultAvatar} alt="avatar" />
-                            <span>{user.username}</span>
+                            <span className='text-truncate'>{user.username}</span>
+                            <NotificationBell className='me-1' />
+                            <Link to='my-account'><IoSettingsOutline style={{ fontSize: "1.8rem", color: "white" }} /></Link>
                             <button className='btn btn-secondary btn-logout' onClick={handleLogout}>Đăng xuất</button>
                         </div>
                     )

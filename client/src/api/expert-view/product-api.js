@@ -24,4 +24,32 @@ const getFilteredProducts = async (searchInput, author, language, page = 1, limi
     return res.data;
 };
 
-export { getProductList, getProductById, getFilteredProducts }
+const createProduct = async (title, description, price, topicId, language, file) => {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("topic_id", topicId);
+    formData.append("language", language);
+    formData.append("file_url", file);
+
+    const res = await axios.post("/products", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+
+    return res.data;
+}
+
+const getMyProducts = async (page = 1, limit = 10) => {
+    const res = await axios.get(`/products/my-products?page=${page}&limit=${limit}`);
+    return res.data;
+}
+
+const deleteProduct = async (id) => {
+    const res = await axios.delete(`/products/${id}`);
+    return res.data;
+}
+
+export { getProductList, getProductById, getFilteredProducts, createProduct, getMyProducts, deleteProduct }

@@ -33,6 +33,15 @@ const signup = async (req, res, next) => {
             DT: user
         })
     } catch (error) {
+        if (
+            error.name === 'SequelizeUniqueConstraintError' &&
+            error.errors?.[0]?.path === 'email'
+        ) {
+            return res.status(400).json({
+                EM: 'Email đã tồn tại',
+                EC: 2
+            });
+        }
         next(error)
     }
 }

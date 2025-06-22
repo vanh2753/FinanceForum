@@ -23,4 +23,31 @@ const getModList = async () => {
     return res.data
 }
 
-export { findUserByEmail, assignExpert, createModAccount, getModList };
+const updateAvatar = async (avatarFile) => {
+    const formData = new FormData();
+    formData.append('avatar_url', avatarFile);
+    const res = await axios.put('/user/avatar', formData);
+    return res.data
+}
+
+const updatePassword = async (oldPassword, newPassword) => {
+    const res = await axios.put('/user/password', { oldPassword, newPassword });
+    return res.data
+}
+
+const updateUsername = async (username) => {
+    const res = await axios.put('/user/username', { username });
+    return res.data
+}
+
+const getMyOrder = async () => {
+    const res = await axios.get(`/orders/my-orders`)
+    return res.data
+}
+
+const getMyPosts = async () => {
+    const res = await axios.get(`/posts/my-posts`)
+    return res.data
+}
+
+export { findUserByEmail, assignExpert, createModAccount, getModList, updateAvatar, updatePassword, updateUsername, getMyOrder, getMyPosts };

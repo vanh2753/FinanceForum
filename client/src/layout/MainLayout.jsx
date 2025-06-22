@@ -9,6 +9,7 @@ const MainLayout = () => {
             <CustomContainer>
                 <Outlet />
             </CustomContainer>
+            <Footer />
         </div>
     );
 };
