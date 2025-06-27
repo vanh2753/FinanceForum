@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const { Op, fn, col, literal } = require('sequelize');
 const { uploadImages } = require('../ultis/cloudinary')
 const { formatTime } = require('../ultis/formatTime')
 const { likeCountForPost, commentCountForPost } = require('../ultis/count')
@@ -432,6 +432,46 @@ const getMyPost = async (req, res, next) => {
     }
 }
 
+const getTrendingPosts = async (req, res, next) => {
+    try {
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1); // lấy thời gian 1 tháng trước
+
+        const trendingPosts = await Post.findAll({
+            subQuery: false, // không được gộp select nếu không sẽ đếm cột likes.id trước khi kịp join bảng likes
+            where: {
+                createdAt: {
+                    [Op.gte]: oneMonthAgo,
+                },
+            },
+            include: [{
+                model: Like,
+                as: 'likes',
+                attributes: [] //không lấy gì vì chỉ dùng để đếm
+            }, {
+                model: Account,
+                attributes: ['id', 'username', 'avatar_url']
+            }],
+            attributes: {
+                include: [
+                    [fn('COUNT', col('likes.id')), 'likeCount'] // phải viết theo tên alias của bảng định nghĩa trong model
+                ]
+            },
+            group: ['Post.id', 'Account.id'], //phải group by cả Account.id để tránh lỗi vì ta include Account trong select
+            order: [[literal('likeCount'), 'DESC']], //literal = alias. Cho phép thao tác sql trên cột alias mà ta tự đặt
+            limit: 5,
+        })
+
+        res.status(200).json({
+            EC: 0,
+            EM: 'get trending post',
+            DT: trendingPosts
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createPost,
     getAllPosts,
@@ -443,5 +483,6 @@ module.exports = {
     getPostsForHome,
     getPostsWithPagination,
     queryPost,
-    getMyPost
+    getMyPost,
+    getTrendingPosts
 }

@@ -24,7 +24,7 @@ const applyAssociations = () => {
   Post.belongsTo(Account, { foreignKey: "author_id" });
   Post.belongsTo(Topic, { foreignKey: "topic_id" });
   Post.hasMany(Comment, { foreignKey: "post_id" });
-  Post.hasMany(Like, { foreignKey: "post_id" });
+  Post.hasMany(Like, { foreignKey: "post_id", as: 'likes' });
 
   // Comment
   Comment.belongsTo(Account, { foreignKey: "author_id" });

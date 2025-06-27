@@ -90,6 +90,11 @@ const getSearchPostsResult = async (searchInput, page = 1, limit = 10) => {
     return res.data;
 }
 
+const getTrendingPosts = async () => {
+    const res = await axios.get(`/posts/trending-posts`);
+    return res.data;
+}
+
 
 export {
     getDataForSection,
@@ -103,5 +108,6 @@ export {
     deletePost,
     getAllPosts,
     approvePostForMod,
-    getSearchPostsResult
+    getSearchPostsResult,
+    getTrendingPosts
 }

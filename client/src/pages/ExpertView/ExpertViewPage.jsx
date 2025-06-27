@@ -18,6 +18,7 @@ const ExpertViewPage = () => {
 
     const limit = 10;
 
+
     const fetchProducts = async (page = 1) => {
         if (!searchInput && !author && !language) {
             const res = await getProductList(page, limit);

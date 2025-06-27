@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { authenticateToken } = require('../middleware/authenticateToken')
-const { createPost, getAllPosts, approvePostForMod, getAllApprovedPosts, getPostById, updatePost, deletePost, getPostsForHome, getPostsWithPagination, queryPost, getMyPost } = require('../controllers/post-controller')
+const { createPost, getAllPosts, approvePostForMod, getAllApprovedPosts, getPostById, updatePost, deletePost, getPostsForHome, getPostsWithPagination, queryPost, getMyPost, getTrendingPosts } = require('../controllers/post-controller')
 const { upload } = require('../middleware/multer')
 const { optionalAuth } = require('../middleware/optionalAuth')
 
@@ -10,6 +10,7 @@ router.get('/posts', authenticateToken, getAllPosts)
 router.get('/posts/my-posts', authenticateToken, getMyPost)
 router.get('/posts/approved', optionalAuth, getAllApprovedPosts)
 router.get('/posts/search', queryPost);
+router.get('/posts/trending-posts', optionalAuth, getTrendingPosts);
 // luôn để get /:params ở dưới /?query nếu không sẽ bị lỗi route
 router.get('/posts/:id', optionalAuth, getPostById)
 router.get('/posts/home/:topicId', optionalAuth, getPostsForHome)

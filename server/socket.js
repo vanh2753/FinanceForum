@@ -12,16 +12,16 @@ const initializeSocket = (httpServer) => {
         }
     });
     io.on('connection', (socket) => {
-        console.log('New client connected');
+        //console.log('New client connected');
 
         //tạo room
         socket.on('join_room', (roomName) => {
             socket.join(roomName);
-            console.log(`📦 Socket ${socket.id} joined room: ${roomName}`);
+            //console.log(`📦 Socket ${socket.id} joined room: ${roomName}`);
         });
 
         socket.on('disconnect', () => {
-            console.log('Client disconnected');
+            //console.log('Client disconnected');
         });
     });
 }

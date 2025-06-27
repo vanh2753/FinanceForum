@@ -4,12 +4,17 @@ import { useParams } from 'react-router-dom';
 import { createOrder, createPaymentSession, checkIfPurchased } from '../../api/expert-view/order-api';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import { FaCartShopping } from "react-icons/fa6"
 
 const ProductDetail = ({ product }) => {
     const { id, title, description, price, language, views, createdAt, Account = {} } = product;
     const [hasPurchased, setHasPurchased] = useState(false);
     const user = useSelector((state) => state.userInfo.user);
 
+    const languageMap = {
+        vietnamese: 'Tiếng Việt',
+        english: 'Tiếng Anh',
+    }
     const handlePayment = async () => {
         try {
             // tạo order
@@ -37,39 +42,39 @@ const ProductDetail = ({ product }) => {
     }, [user, product]);
 
     return (
-        <div className="container mt-4 text-white" style={{ backgroundColor: '#1c2e4a' }}>
-            <div className="row" style={{ backgroundColor: '#1c2e4a' }}>
-                {/* Cột trái: thông tin phụ */}
-                <div className=" col-md-4 d-flex flex-column gap-3">
-                    <div className="d-flex align-items-center">
-                        <span>Tác giả: </span>
+        <div className="container mt-4 text-white bg-light" >
+            <div className="row align-items-start" style={{ backgroundColor: '#1c2e4a' }}>
+                {/* Cột trái: Thông tin phụ */}
+                <div className="col-md-4 d-flex flex-column justify-content-between py-3 "  >
+                    {/* Tác giả */}
+                    <div className="text-center mb-4">
                         <img
                             src={Account.avatar_url}
                             alt="avatar"
-                            className="rounded-circle me-2"
-                            style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                            className="rounded-circle mb-2"
+                            style={{ width: '70px', height: '70px', objectFit: 'cover' }}
                         />
-                        <span className="fw-medium">{Account.username}</span>
+                        <div className="fw-semibold">{Account.username}</div>
                     </div>
-                    <div className="">Ngôn ngữ: {language?.toUpperCase()}</div>
-                    <div className="">Lượt tải về: {views}</div>
-                    <div className="">
-                        Ngày đăng: {new Date(createdAt).toLocaleDateString()}
-                    </div>
-                </div>
 
-                {/* Cột phải: tiêu đề + mô tả */}
-                <div className="col-md-8">
-                    <h2 className="mb-3 mt-2" >
-                        {title}
-                    </h2>
-                    <hr />
-                    <p className="mt-2 " style={{ fontSize: '1.0rem', fontStyle: 'italic' }} >{description}</p>
-                    {/* Dưới cùng: giá tiền + thanh toán */}
-                    <div className=" mt-3 align-items-center  ">
-                        <div className="g me-3 fs-3" style={{ color: '#ff6f00' }}>{price} $</div>
+                    {/* Ngôn ngữ + lượt tải */}
+                    <div className="d-flex justify-content-around text-center mb-4 " >
+                        <div>
+                            <div className="fs-5 fw-bold">Ngôn ngữ</div>
+                            <div>{languageMap[language]}</div>
+                        </div>
+                        <div>
+                            <div className="fs-5 fw-bold">Lượt tải</div>
+                            <div>{views}</div>
+                        </div>
+                    </div>
+
+                    {/* Giá + nút thanh toán */}
+                    <div className="text-center">
+                        <div className="fs-2 fw-bold mb-2" style={{ color: 'green' }}>{price} $</div>
                         {!hasPurchased ? (
-                            <Button className='border-0 mb-3' style={{ backgroundColor: '#ff6f00' }} onClick={handlePayment}>
+                            <Button className='border-0' style={{ backgroundColor: 'green' }} onClick={handlePayment}>
+                                <FaCartShopping className="me-2" />
                                 Thanh toán
                             </Button>
                         ) : (
@@ -77,16 +82,24 @@ const ProductDetail = ({ product }) => {
                                 href={product.file_url}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="btn btn-success mb-3"
+                                className="btn btn-success"
                             >
                                 Tải file
                             </a>
                         )}
                     </div>
                 </div>
+
+                {/* Cột phải: Tiêu đề + mô tả + ngày */}
+                <div className="col-md-8 py-3" >
+                    <h2 className="mb-3">{title}</h2>
+                    <hr />
+                    <p className="fst-italic " >{description}</p>
+                    <div className="mt-4" style={{ fontSize: '0.8rem' }} >Ngày đăng: {new Date(createdAt).toLocaleDateString()}</div>
+                </div>
             </div>
         </div>
-    );
+    )
 };
 
 export default ProductDetail;
