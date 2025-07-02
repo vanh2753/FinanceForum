@@ -44,7 +44,7 @@ const ProductListPanel = () => {
         <div>
             <h3 className="text-light mb-4 text-center">Danh sách sản phẩm</h3>
 
-            <Table striped bordered hover responsive>
+            <Table bordered hover responsive>
                 <thead>
                     <tr className="text-nowrap">
                         <th className="text-center">Tên sản phẩm</th>
@@ -56,7 +56,8 @@ const ProductListPanel = () => {
                 <tbody>
                     {products.map(product => (
                         <tr key={product.id}>
-                            <td className="text-wrap w-75">{product.title}</td>
+                            <td ><a href={`/expert/products/${product.id}`} className="text-decoration-none text-dark" target="_blank" >{product.title}</a>
+                            </td>
                             <td className="text-nowrap">{product.price} $</td>
                             <td>{product.views || 0}</td>
                             <td className="text-nowrap" >
@@ -98,30 +99,6 @@ const ProductListPanel = () => {
                     onPageChange={(newPage) => setPage(newPage)}
                 />
             )}
-
-            {/* Modal chi tiết sản phẩm */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Chi tiết sản phẩm</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {selectedProduct && (
-                        <>
-                            <p><strong>Tiêu đề:</strong> {selectedProduct.title}</p>
-                            <p><strong>Mô tả:</strong> {selectedProduct.description}</p>
-                            <p><strong>Ngôn ngữ:</strong> {selectedProduct.language}</p>
-                            <p><strong>Chủ đề:</strong> {selectedProduct.topic?.title || selectedProduct.topic_id}</p>
-                            <p><strong>Ngày tạo:</strong> {new Date(selectedProduct.createdAt).toLocaleDateString("vi-VN")}</p>
-                            <p><strong>File:</strong> <a href={selectedProduct.file_url} target="_blank" rel="noopener noreferrer">Tải xuống</a></p>
-                        </>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Đóng
-                    </Button>
-                </Modal.Footer>
-            </Modal>
 
             {/* Modal xóa sản phẩm */}
             <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>

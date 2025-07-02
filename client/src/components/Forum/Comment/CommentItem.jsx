@@ -7,11 +7,14 @@ import {
 import { useState } from "react";
 import AuthModal from "../../Auth/AuthModal";
 import { useSelector } from "react-redux";
+import EditDelButton from "../ActionButton/EditDelButton";
 const CommentItem = ({ comment }) => {
   const [liked, setLiked] = useState(comment.isLiked);
   const [likesCount, setLikesCount] = useState(comment.likeCount);
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
   const [show, setShow] = useState(false)
+
+  const user = useSelector((state) => state.userInfo.user);
   const handleLike = async (id) => {
     if (!isLoggedIn) {
       setShow(true);
@@ -60,7 +63,14 @@ const CommentItem = ({ comment }) => {
         <div className="" style={{ fontSize: "0.75rem" }}>
           {new Date(comment.createdAt).toLocaleString()}
         </div>
+        {user?.id === comment.Account?.id && (
+          <div className="text-white">
+            <EditDelButton data={comment} type="comment" />
+          </div>
+        )}
       </div>
+
+
       <div className="action-buttons mx-3">
         <div>
           <LikeButton

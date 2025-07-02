@@ -80,14 +80,11 @@ const PostContent = ({ postData }) => {
           <div className="fw-bold" style={{ fontSize: "1.2rem" }}>
             {Account.username}
           </div>
-          <div className="" style={{ fontSize: "0.8rem" }}>
-            {Account.email}
-          </div>
         </div>
 
         {/* Post content  */}
         <div className="col-md-10 ps-4">
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between border-bottom">
             <div>
               <h4 className="fw-bold">{title}</h4>
               <div className=" mb-2" style={{ fontSize: "0.8rem" }}>
@@ -112,7 +109,7 @@ const PostContent = ({ postData }) => {
             )}
           </div>
 
-          <div className="border p-3 rounded">
+          <div className="pt-3">
             {content}
             {image_urls && image_urls.length > 0 && (
               <div className="mt-3">

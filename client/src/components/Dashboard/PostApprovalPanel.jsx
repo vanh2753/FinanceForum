@@ -96,11 +96,43 @@ const PostApprovalPanel = () => {
             {/* Modal hiển thị nội dung bài viết */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Nội dung bài viết</Modal.Title>
+                    <Modal.Title >Nội dung bài viết</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {selectedPost?.content}
+                    <div className="d-flex">
+                        {/* Cột trái: Thông tin tác giả */}
+                        <div className="col-md-3 border-end">
+                            <div className="text-center mb-3">
+                                <img
+                                    src={selectedPost?.Account?.avatar_url || "/default-avatar.png"}
+                                    alt="Avatar"
+                                    className="img-fluid rounded-circle mb-2"
+                                    style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                                />
+                                <h6>{selectedPost?.Account?.username || "Ẩn danh"}</h6>
+                            </div>
+                        </div>
+
+                        {/* Cột phải: Nội dung + ảnh */}
+                        <div className="col-md-9 px-3 pt-2">
+                            <div className="mb-4">{selectedPost?.content}</div>
+
+                            {/* Danh sách ảnh nếu có */}
+                            {selectedPost?.image_urls?.length > 0 && (
+                                <div className="d-flex flex-column gap-3">
+                                    {selectedPost.image_urls.map((url, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={url}
+                                            className="img-fluid  "
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </Modal.Body>
+
             </Modal>
         </>
     );

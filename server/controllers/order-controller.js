@@ -43,8 +43,6 @@ const checkIfPurchased = async (req, res, next) => {
         const userId = req?.user?.userId;
         const { productId } = req.params
 
-        console.log(userId, productId)
-
         const order = await Order.findOne({
             where: {
                 product_id: productId,

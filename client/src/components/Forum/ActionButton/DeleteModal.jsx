@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom'
 import { deletePost } from '../../../api/forum/post-api'
+import { deleteComment } from '../../../api/forum/comment-api'
 const DeleteModal = (props) => {
     const { show, handleClose, data, type } = props
     const navigate = useNavigate()
@@ -9,15 +10,30 @@ const DeleteModal = (props) => {
     let objectDeleting = ''
     switch (type) {
         case 'post':
-            objectDeleting = 'bài viết'
+            objectDeleting = 'bài viết';
+            break;
+        case 'comment':
+            objectDeleting = 'bình luận';
+            break;
     }
     const handleDelete = async () => {
+        let res;
+
         switch (type) {
             case 'post':
-                const res = await deletePost(data.id)
+                res = await deletePost(data.id);
                 if (res.EC === 0) {
-                    navigate('/forum')
+                    navigate('/forum');
                 }
+                break;
+
+            case 'comment':
+                res = await deleteComment(data.id);
+                console.log(res);
+                if (res.EC === 0) {
+                    window.location.reload();
+                }
+                break;
         }
     }
     return (

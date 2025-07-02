@@ -3,6 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { useState } from "react";
 import EditPostForm from "../Post/EditPostForm";
 import DeleteModal from "./DeleteModal";
+import EditCommentForm from "../Comment/EditCommentForm";
 const EditDelButton = (props) => {
     const { data, type } = props
     const [showEditModal, setShowEditModal] = useState(false)
@@ -11,10 +12,11 @@ const EditDelButton = (props) => {
     const renderEditComponent = () => {
         switch (type) {
             case 'post':
-                return <EditPostForm show={showEditModal} handleClose={() => setShowEditModal(false)} postData={data} />
-
+                return <EditPostForm show={showEditModal} handleClose={() => setShowEditModal(false)} postData={data} />;
+            case 'comment':
+                return <EditCommentForm show={showEditModal} handleClose={() => setShowEditModal(false)} commentData={data} />;
             default:
-                return null
+                return null;
         }
     }
 

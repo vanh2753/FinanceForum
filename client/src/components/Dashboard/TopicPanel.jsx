@@ -70,7 +70,7 @@ const TopicPanel = () => {
                 <Button onClick={handleShowAdd}>+ Thêm Topic</Button>
             </div>
 
-            <Table striped bordered hover>
+            <Table bordered hover>
                 <thead>
                     <tr>
                         <th>#</th>

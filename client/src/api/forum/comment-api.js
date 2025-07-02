@@ -14,13 +14,23 @@ const createComment = async (postId, content) => {
     return res.data
 }
 
-const createLikeForComment = (id) => {
-    const res = axios.post(`/comments/${id}/like`);
+const createLikeForComment = async (id) => {
+    const res = await axios.post(`/comments/${id}/like`);
     return res.data
 }
 
-const unlikeForComment = (id) => {
-    const res = axios.delete(`/comments/${id}/unlike`);
+const unlikeForComment = async (id) => {
+    const res = await axios.delete(`/comments/${id}/unlike`);
     return res.data
 }
-export { getCommentData, createComment, createLikeForComment, unlikeForComment }
+
+const updateComment = async (id, content) => {
+    const res = await axios.put(`/comments/${id}`, { content });
+    return res.data
+}
+
+const deleteComment = async (id) => {
+    const res = await axios.delete(`/comments/${id}`);
+    return res.data
+}
+export { getCommentData, createComment, createLikeForComment, unlikeForComment, updateComment, deleteComment }

@@ -33,7 +33,7 @@ const CreateCommentArea = (props) => {
     <>
       {show && <AuthModal show={show} setShow={setShow} />}
       <div
-        className="d-flex mt-3 p-3 rounded border"
+        className="d-flex mt-3 p-3 "
         style={{ backgroundColor: "#1c2e4a" }}
       >
         <div className="me-3 text-center" style={{ width: "60px" }}>

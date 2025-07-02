@@ -3,6 +3,7 @@ import { Form, Button, Alert } from "react-bootstrap";
 import { createProduct } from "../../api/expert-view/product-api";
 import { getTopicsList } from "../../api/forum/post-api";
 import { toast, ToastContainer } from "react-toastify";
+import { Spinner } from "react-bootstrap";
 
 const CreateProductForm = () => {
     const [title, setTitle] = useState("");
@@ -12,6 +13,7 @@ const CreateProductForm = () => {
     const [language, setLanguage] = useState("");
     const [file, setFile] = useState(null);
     const [topics, setTopics] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [error, setError] = useState(null);
 
@@ -28,14 +30,16 @@ const CreateProductForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-        console.log("🟢 handleSubmit được gọi");
+        setIsLoading(true);
 
         // Validate
         if (!title || !price || !topicId || !language || !file) {
+            setIsLoading(false);
             return setError("Vui lòng nhập đầy đủ thông tin và chọn file PDF.");
         }
 
         if (file.type !== "application/pdf") {
+            setIsLoading(false);
             return setError("Sai định dạng file, vui lòng chọn file PDF.");
         }
 
@@ -51,6 +55,7 @@ const CreateProductForm = () => {
 
             if (res.EC === 0) {
                 toast.success("Đăng tải sản phẩm mới thành công!");
+                setIsLoading(false);
                 setTitle("");
                 setDescription("");
                 setPrice("");
@@ -58,6 +63,7 @@ const CreateProductForm = () => {
                 setLanguage("");
                 setFile(null);
             } else {
+                setIsLoading(false);
                 setError(res.EM || "Có lỗi xảy ra.");
             }
         } catch (err) {
@@ -131,10 +137,14 @@ const CreateProductForm = () => {
                             />
                         </div>
                         <div className="col-3">
-                            <Form.Label>Giá</Form.Label>
+                            <Form.Label>
+                                Giá <span className="">(tối đa 100$)</span>
+                            </Form.Label>
                             <Form.Control
                                 type="number"
                                 min="0"
+                                step="0.01" //giúp nhập float
+                                max={100}
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                             />
@@ -148,6 +158,27 @@ const CreateProductForm = () => {
                 </Form>
                 <ToastContainer position="top-center" autoClose={3000} />
             </div>
+            {isLoading && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        backgroundColor: "rgba(255,255,255,0.7)",
+                        zIndex: 9999,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <div className="text-center">
+                        <Spinner animation="border" variant="primary" style={{ width: "4rem", height: "4rem" }} />
+                        <div className="mt-3 fw-bold text-dark">Đang xử lý, vui lòng chờ...</div>
+                    </div>
+                </div>
+            )}
         </div>
 
     )

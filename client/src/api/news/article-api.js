@@ -41,11 +41,23 @@ const getSearchArticlesResult = async (searchInput, page = 1, limit = 10) => {
   return res.data;
 }
 
+const getAllArticlesForMod = async () => {
+  const res = await axios.get("/articles/article-mod-dashboard");
+  return res.data;
+};
+
+const deleteArticle = async (id) => {
+  const res = await axios.delete(`/articles/${id}`);
+  return res.data;
+}
+
 export {
   uploadArticleImage,
   createArticle,
   getAllNews,
   getArticleById,
   getArticlesForHomeSection,
-  getSearchArticlesResult
+  getSearchArticlesResult,
+  getAllArticlesForMod,
+  deleteArticle
 };
