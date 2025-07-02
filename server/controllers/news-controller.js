@@ -169,11 +169,22 @@ const queryAriticles = async (req, res, next) => {
 
     const totalPages = Math.ceil(count / limit);
 
+    const dataWithExtras = rows.map((article) => {
+      const { excerpt, image } = extractExcerptAndImage(article.content);
+      return {
+        id: article.id,
+        title: article.title,
+        createdAt: article.createdAt,
+        excerpt,
+        image,
+      };
+    });
+
     res.status(200).json({
       EM: "Lấy kết quả tìm kiếm bài viết",
       EC: 0,
       DT: {
-        items: rows,
+        items: dataWithExtras,
         currentPage: page,
         totalPages: totalPages,
         totalPosts: count

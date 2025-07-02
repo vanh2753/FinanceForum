@@ -67,8 +67,54 @@ const getTopicsList = async (req, res, next) => {
     }
 }
 
+const updateTopic = async (req, res, next) => {
+    try {
+        const topicId = req.params.topicId
+        const { title, description } = req.body
+
+        const topic = await Topic.findByPk(topicId)
+        if (!topic) {
+            return res.status(404).json({
+                EM: 'Topic không tồn tại',
+                EC: 1
+            })
+        }
+
+        await topic.update({ title, description })
+        return res.status(200).json({
+            EM: 'Cập nhật topic thành công',
+            EC: 0,
+            DT: topic
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const deleteTopic = async (req, res, next) => {
+    try {
+        const topicId = req.params.topicId
+        const topic = await Topic.findByPk(topicId)
+        if (!topic) {
+            return res.status(404).json({
+                EM: 'Topic không tồn tại',
+                EC: 1
+            })
+        }
+        await topic.destroy()
+        return res.status(200).json({
+            EM: 'Xóa topic thành cong',
+            EC: 0
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createTopic,
     getTopicsForPreviewSection,
-    getTopicsList
+    getTopicsList,
+    updateTopic,
+    deleteTopic
 }

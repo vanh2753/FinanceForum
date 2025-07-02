@@ -11,7 +11,6 @@ const { getIO } = require('../socket')
 const createPost = async (req, res, next) => {
     try {
         const { topic_id, title, content } = req.body
-        console.log(req.body)
         const author_id = req.user.userId
         if (!topic_id || !title || !content) {
             return res.status(400).json({

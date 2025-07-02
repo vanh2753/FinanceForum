@@ -95,6 +95,19 @@ const getTrendingPosts = async () => {
     return res.data;
 }
 
+const createNewTopic = async (title, description) => {
+    const res = await axios.post('/topics', { title, description })
+    return res.data
+}
+const updateTopic = async (topicId, title, description) => {
+    const res = await axios.put(`/topics/${topicId}`, { title, description })
+    return res.data
+}
+
+const deleteTopic = async (topicId) => {
+    const res = await axios.delete(`/topics/${topicId}`)
+    return res.data
+}
 
 export {
     getDataForSection,
@@ -109,5 +122,8 @@ export {
     getAllPosts,
     approvePostForMod,
     getSearchPostsResult,
-    getTrendingPosts
+    getTrendingPosts,
+    updateTopic,
+    deleteTopic,
+    createNewTopic
 }
