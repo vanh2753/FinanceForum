@@ -5,6 +5,7 @@ import { createOrder, createPaymentSession, checkIfPurchased } from '../../api/e
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { FaCartShopping } from "react-icons/fa6"
+import pdfIcon from '../../assets/images/PDF_file_icon.png'
 
 const ProductDetail = ({ product }) => {
     const { id, title, description, price, language, views, createdAt, Account = {} } = product;
@@ -57,6 +58,7 @@ const ProductDetail = ({ product }) => {
                         <div className="fw-semibold">{Account.username}</div>
                     </div>
 
+
                     {/* Ngôn ngữ + lượt tải */}
                     <div className="d-flex justify-content-around text-center mb-4 " >
                         <div>
@@ -67,6 +69,16 @@ const ProductDetail = ({ product }) => {
                             <div className="fs-5 fw-bold">Lượt tải</div>
                             <div>{views}</div>
                         </div>
+                    </div>
+
+
+                    <div className="text-center mb-2">
+                        <img
+                            src={pdfIcon} // hoặc link ảnh biểu tượng PDF
+                            alt="PDF"
+                            style={{ width: '55px', height: '70px' }}
+                        />
+                        <div className="mt-2 text-white-50">Tài liệu PDF</div>
                     </div>
 
                     {/* Giá + nút thanh toán */}

@@ -87,7 +87,7 @@ const UserDashboard = () => {
                     {activeTab === "myposts" && (
                         <div>
                             <h5 className="mb-3">Bài viết của bạn</h5>
-                            <Table striped bordered hover responsive>
+                            <Table bordered hover responsive>
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -100,7 +100,7 @@ const UserDashboard = () => {
                                         <tr key={post.id}>
                                             <td>{index + 1}</td>
                                             <td>
-                                                <Link to={`/forum/posts/${post.id}`} className="text-decoration-none">
+                                                <Link to={`/forum/posts/${post.id}`} className="text-decoration-none text-dark">
                                                     {post.title}
                                                 </Link>
                                             </td>
