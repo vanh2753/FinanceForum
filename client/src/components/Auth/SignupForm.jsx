@@ -5,6 +5,8 @@ import imgPlaceholder from '../../assets/images/img-placeholder.png'
 import { useDispatch } from 'react-redux'
 import { signup } from '../../api/auth'
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from "react-toastify";
+
 const SignupForm = (props) => {
     const { handleShowLogin } = props
     const [previewImage, setPreviewImage] = useState(imgPlaceholder)
@@ -16,6 +18,7 @@ const SignupForm = (props) => {
     const [emailError, setEmailError] = useState("");
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate()
 
@@ -24,11 +27,15 @@ const SignupForm = (props) => {
         setEmailError("");
         setUsernameError("");
         setPasswordError("");
+        setLoading(true);
         try {
             const data = { email, password, username, avatar }
             const res = await signup(data)
             if (res.EC === 0) {
-                handleShowLogin() //đổi sang form login
+                toast.success("Đăng ký thành công. Hãy đăng nhập !", { style: { width: "450px" } });
+                setTimeout(() => {
+                    handleShowLogin();
+                }, 500); // Để Toast hiện khoảng 500ms trước khi đổi form
             }
         } catch (err) {
             const data = err.response?.data;
@@ -44,6 +51,7 @@ const SignupForm = (props) => {
                 setError("Đã xảy ra lỗi, vui lòng thử lại sau.");
             }
         }
+        setLoading(false);
     }
 
 
@@ -130,7 +138,7 @@ const SignupForm = (props) => {
                         </div>
 
                         <Button variant="primary" className="w-100 mb-3" type="submit">
-                            Đăng ký
+                            {loading ? "Đang xử lý..." : "Đăng ký"}
                         </Button>
 
                         <div className="text-center">
@@ -142,6 +150,7 @@ const SignupForm = (props) => {
                     </Form>
                 </div>
             </div>
+
         </div>
     )
 }

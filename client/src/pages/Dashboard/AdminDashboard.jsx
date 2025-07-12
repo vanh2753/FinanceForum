@@ -6,7 +6,7 @@ import HeaderDashboard from "./HeaderDashboard";
 import ModListPanel from "../../components/Dashboard/ModListPanel";
 import { useSelector } from "react-redux";
 import CreateModForm from "../../components/Dashboard/CreateModFrom";
-import TopicPanel from "../../components/Dashboard/TopicPanel";
+
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("registerMod");
@@ -37,15 +37,6 @@ const AdminDashboard = () => {
                             <FaUsersCog />
                             Danh sách Mod
                         </ListGroup.Item>
-                        <ListGroup.Item
-                            action
-                            active={activeTab === "topics"}
-                            onClick={() => setActiveTab("topics")}
-                            className="d-flex align-items-center gap-2"
-                        >
-                            📋 Topics
-                        </ListGroup.Item>
-
                     </ListGroup>
                 </div>
 
@@ -62,11 +53,6 @@ const AdminDashboard = () => {
                     {activeTab === "modList" && (
                         <div>
                             <ModListPanel />
-                        </div>
-                    )}
-                    {activeTab === "topics" && (
-                        <div>
-                            <TopicPanel />
                         </div>
                     )}
 

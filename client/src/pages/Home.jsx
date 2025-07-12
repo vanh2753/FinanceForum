@@ -33,9 +33,6 @@ const Home = () => {
             <ExpertViewSection />
           </div>
         </div>
-        <div>
-          <Footer />
-        </div>
       </div>
     </div>
   );

@@ -23,6 +23,8 @@ import RequireRole from './RequireRole'
 import PaymentSuccess from '../pages/ExpertView/PaymentSuccess'
 import ExpertDashboard from '../pages/Dashboard/ExpertDashboard'
 import UserDashboard from '../pages/Dashboard/UserDashboard'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.userInfo?.user)
@@ -118,7 +120,7 @@ const AppRoutes = () => {
                     </Route>
                 </Route>
             </Routes>
-
+            <ToastContainer position="top-center" autoClose={3000} />
         </>
     )
 }

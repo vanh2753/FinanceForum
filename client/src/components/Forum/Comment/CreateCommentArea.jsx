@@ -36,7 +36,7 @@ const CreateCommentArea = (props) => {
         className="d-flex mt-3 p-3 "
         style={{ backgroundColor: "#1c2e4a" }}
       >
-        <div className="me-3 text-center" style={{ width: "60px" }}>
+        <div className="me-3 text-center col-md-2" style={{ wordBreak: "break-word" }}>
           <img
             src={user?.avatar_url || defaultAvatar}
             alt="avatar"

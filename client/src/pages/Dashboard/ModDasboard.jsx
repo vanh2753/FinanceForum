@@ -8,7 +8,8 @@ import { useSelector } from "react-redux";
 import HeaderDashboard from "./HeaderDashboard";
 import { MdArticle } from "react-icons/md";
 import NewsPanel from "../../components/Dashboard/NewsPanel";
-
+import TopicPanel from "../../components/Dashboard/TopicPanel";
+import { MdTopic } from "react-icons/md";
 const ModDashboard = () => {
     const [activeTab, setActiveTab] = useState("posts"); //quản lý state để viết điều kiện render content
     const user = useSelector(state => state.userInfo.user)
@@ -48,6 +49,15 @@ const ModDashboard = () => {
                             <MdArticle />
                             Quản lý Tin tức
                         </ListGroup.Item>
+                        <ListGroup.Item
+                            action
+                            active={activeTab === "topics"}
+                            onClick={() => setActiveTab("topics")}
+                            className="d-flex align-items-center gap-2"
+                        >
+                            <MdTopic /> Topics
+                        </ListGroup.Item>
+
                     </ListGroup>
                 </div>
 
@@ -70,6 +80,11 @@ const ModDashboard = () => {
                     {activeTab === "newsPanel" && (
                         <div>
                             <NewsPanel />
+                        </div>
+                    )}
+                    {activeTab === "topics" && (
+                        <div>
+                            <TopicPanel />
                         </div>
                     )}
                 </div>
